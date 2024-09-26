@@ -13,10 +13,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "backend": "FLASK_APP=run.py",
+    "dev": "concurrently \"npm start\" \"npm run backend\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://localhost:5000",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -36,3 +39,4 @@
     ]
   }
 }
+
