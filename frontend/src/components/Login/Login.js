@@ -14,7 +14,7 @@ const MainLoginDiv = () => {
                     <label htmlFor="inputUsername5" className="form-label">User</label>
                     <input className="form-control" type="text" placeholder=">" aria-label="default input example" id="inputUsername5" />
                     <label htmlFor="inputPassword5" className="form-label">Password</label>
-                    <input type="password" id="inputPassword5" className="form-control" placeholder=">" aria-describedby="passwordHelpBlock" />
+                    <input type="password" id="inputPassword5" className="form-control" placeholder=">" />
                 </div>
             </div>
         </>
