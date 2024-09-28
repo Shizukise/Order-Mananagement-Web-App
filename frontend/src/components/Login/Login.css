@@ -26,7 +26,7 @@ body {
     border: 1px solid #ced4da; /* Light border */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    padding: 20px; /* Padding inside the square */
+    padding: 30px; /* Padding inside the square */
 }
 
 /* Optional: Style for input labels */

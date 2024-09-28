@@ -1,6 +1,6 @@
 /* Main Navbar styles */
 #MainNavbar {
-    background-color: rgb(0, 153, 255); /* Navbar background color */
+    background-color: #003366; /* Navy Blue - Primary Color */
 }
 
 /* Navbar Item styles */
@@ -9,8 +9,11 @@
 }
 
 .navbar-brand {
+    color: white; /* White for the brand name */
+}
 
-    color: black;
+.navbar-brand:hover {
+    color: #009688; /* Teal on hover */
 }
 
 .nav-item {
@@ -18,12 +21,12 @@
 }
 
 .nav-link {
-    color: #000000; /* Set a color for links */
+    color: #ffffff; /* Set a color for links */
     text-decoration: none; /* Remove underline */
 }
 
 .nav-link:hover {
-    color: #ffffff; /* Change color on hover */
+    color: #00f7ff; /* Light Teal on hover */
 }
 
 /* Dropdown Menu styles */

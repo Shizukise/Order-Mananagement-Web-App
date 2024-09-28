@@ -1,0 +1,43 @@
+/* ManagementNav.css */
+
+#ManagementNav {
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center;
+    background-color: #003366; /* Navy Blue - Primary Color */
+    padding: 5px 20px;
+    border-bottom: 2px solid #009688; /* Teal - Secondary Color */
+}
+
+.mngmntnav {
+    color: white; /* Text color */
+    text-decoration: none; /* Remove underline */
+    padding: 5px 15px; /* Padding around links */
+    margin-right: 20px; /* Space between links */
+    transition: color 0.3s ease; /* Smooth transition for color change */
+}
+
+.mngmntnav:hover {
+    color: rgba(255, 255, 255, 0.8); /* Change color on hover */
+    text-decoration: none !important;
+}
+
+.mngmntnav-active {
+    font-weight: bold; /* Bold text for active link */
+    text-decoration: underline !important; /* Underline active link */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #ManagementNav {
+        flex-direction: column; /* Stack links vertically on smaller screens */
+        align-items: flex-start; /* Align links to the start */
+        padding: 10px; /* Increased padding for touch targets */
+    }
+
+    .mngmntnav {
+        width: 100%; /* Make links take full width */
+        margin-right: 0; /* Reset right margin */
+        margin-bottom: 10px; /* Space between links */
+    }
+}
