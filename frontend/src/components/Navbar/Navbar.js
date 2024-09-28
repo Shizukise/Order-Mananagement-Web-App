@@ -1,10 +1,25 @@
 import React from "react";
 import './Navbar.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+
 
 const Navbar = () => {
     const { user } = useAuth()
+    const navigate = useNavigate()
+
+    const handleLogout = async () => {
+        const response = await fetch('http://localhost:5000/logoutuser', {
+            method: 'POST',
+            credentials: 'include', //important so that flask login handles logout and cookie removal
+        });
+    
+        if (response.ok) {
+            navigate('/')
+        } else {
+            console.error('Logout failed');
+        }
+    };
 
     if (user) {
         return (
@@ -30,7 +45,7 @@ const Navbar = () => {
                                     <li><Link className="dropdown-item" to="#">{user}</Link></li>
                                     <li><Link className="dropdown-item" to="#">Teams</Link></li>
                                     <li><hr className="dropdown-divider" /></li>
-                                    <li><Link className="dropdown-item" to="#">Logoff</Link></li>
+                                    <li><Link className="dropdown-item" to="#" onClick={() => handleLogout()}>Logoff</Link></li>
                                 </ul>
                             </li>
                         </ul>

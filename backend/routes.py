@@ -1,6 +1,6 @@
 from backend import app,bcrypt,db
 from backend.models import User
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, session
 from flask_login import login_user, logout_user, login_required, current_user
 
 
@@ -10,6 +10,9 @@ from flask_login import login_user, logout_user, login_required, current_user
 def serveReact(path):
     return render_template('index.html')
 
+
+
+#Login endpoint
 @app.route('/loginuser',methods=['POST'])
 def login():
     data = request.json
@@ -19,13 +22,20 @@ def login():
     # Find the user by username
     user = User.query.filter_by(username=username).first()
     
-    # Check if user exists and verify the password
+    # Check if user exists and verify the password( only hashed version of password is checked )
     if user and bcrypt.check_password_hash(user.password_hash, password):
         login_user(user)
-        print(user.username)
+        session.permanent = True
         return jsonify({"message": "Login successful", "user" : f"{user.username}"}), 200
     
     return jsonify({"message": "Invalid credentials"}), 401
+
+#Logout endpoint
+@app.route('/logoutuser',methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({"message":"Logout successful"}), 200
 
 
 
