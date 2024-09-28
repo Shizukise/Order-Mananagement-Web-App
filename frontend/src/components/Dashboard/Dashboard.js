@@ -2,7 +2,7 @@ import Navbar from "../Navbar/Navbar";
 /* import { useAuth } from "../../contexts/AuthContext"; */
 
 
-const DashBoard = () => {
+const Dashboard = () => {
 
     return (
         <>
@@ -12,4 +12,4 @@ const DashBoard = () => {
     )
 }
 
-export default DashBoard
+export default Dashboard
