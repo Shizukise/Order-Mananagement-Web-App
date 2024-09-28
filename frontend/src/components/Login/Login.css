@@ -1,0 +1,48 @@
+body {
+    overflow-y: hidden;
+};
+
+
+
+/* Container for the login form */
+#MainLoginContainer {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full viewport height */
+    padding: 20px; /* Add padding for smaller screens */
+}
+
+/* Style for the MainLoginDiv */
+#MainLoginDiv {
+    display: flex;
+    flex-direction: column; /* Stack inputs vertically */
+    justify-content: center; /* Center contents vertically */
+    align-items: center; /* Center contents horizontally */
+    width: 90%; /* Full width on small screens */
+    max-width: 400px; /* Maximum width to keep it looking good on larger screens */
+    height: auto; /* Auto height to allow for flexible content */
+    background-color: white; /* White background */
+    border: 1px solid #ced4da; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 20px; /* Padding inside the square */
+}
+
+/* Optional: Style for input labels */
+.form-label {
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+/* Optional: Style for inputs */
+.form-control {
+    margin-bottom: 15px; /* Space between inputs */
+    width: 100%; /* Make inputs take full width */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+    #MainLoginDiv {
+        padding: 15px; /* Reduce padding on smaller screens */
+    }
+}

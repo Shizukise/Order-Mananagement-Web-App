@@ -1,0 +1,33 @@
+/* Main Navbar styles */
+#MainNavbar {
+    background-color: rgb(0, 153, 255); /* Navbar background color */
+}
+
+/* Navbar Item styles */
+.navbar-nav {
+    margin-left: auto; /* Ensure the nav items are right-aligned */
+}
+
+.navbar-brand {
+
+    color: black;
+}
+
+.nav-item {
+    margin-left: 20px; /* Space between nav items */
+}
+
+.nav-link {
+    color: #000000; /* Set a color for links */
+    text-decoration: none; /* Remove underline */
+}
+
+.nav-link:hover {
+    color: #ffffff; /* Change color on hover */
+}
+
+/* Dropdown Menu styles */
+.dropdown-menu {
+    left: auto; /* Ensure dropdown aligns properly */
+    right: 0; /* Align dropdown to the right */
+}
