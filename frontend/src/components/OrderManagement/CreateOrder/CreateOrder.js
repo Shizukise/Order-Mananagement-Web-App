@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ManagementNav from '../ManagementNav/Managementnav';
 import { useAuth } from '../../../contexts/AuthContext';
 import './CreateOrder.css'; // Assuming you have a CSS file for this component
 
 const CreateOrder = () => {
     const { user } = useAuth()
+    const [products,setProducts] = useState(null)
+    const [loading,setLoading] = useState(true)
+    const [currentOrderProducts, setCurrentOrderProducts] = useState(null)
     const [form1Data, setForm1Data] = useState({
         creatorEmail: '',
         customerName: '',
@@ -20,7 +23,12 @@ const CreateOrder = () => {
         orderNotes: '',
         deliveryMethod: 'Standard Shipping'    //here we have space for urgent delivery also
     })
-
+    const [form3Data, setForm3Data] = useState({
+        productSelect: '',
+        quantity: '1',
+        price: 0
+    })
+    
 
     const handleChange1 = (e) => {
         const { name, value } = e.target;
@@ -37,6 +45,64 @@ const CreateOrder = () => {
             [name]: value,
         })); 
     };
+    const handleChange3 = (e) => {
+        const {name, value } = e.target;
+        let currentPrice 
+        if (name !== "quantity") {
+        for (const product of products) {
+            if (product[0] === value) {
+                currentPrice = product[1];
+                break;
+            }
+        }
+        const totalPrice = currentPrice * form3Data.quantity
+        setForm3Data((prevData) => ({
+            ...prevData,
+            [name]: value,
+            ["price"]: `${totalPrice}.00€`,
+        }))
+        } else {
+            setForm3Data((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }))
+        }
+    }
+
+
+    useEffect(() => {
+        async function fetchProducts() {
+            try {
+                const response = await fetch(`/getallproducts`);
+                const result = await response.json();
+                setProducts(result);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching data: ", error);
+                setLoading(false);
+            }
+        }
+        fetchProducts()
+    }, []);
+    
+    if (loading) {
+        return <p>Loading products...</p>;
+    }
+    
+    if (!products) {
+        return <p>error loading item</p>
+    }
+
+    
+
+    function AllProducts() {
+        return products.map(product => (
+            <option key={product[0]}>
+                {product[0]}
+            </option>
+        ));
+    };
+
 
     return (
         <>
@@ -196,16 +262,17 @@ const CreateOrder = () => {
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-6 mb-3">
-                                <label htmlFor="productSearch" className="form-label">Product Search</label>
-                                <input type="text" className="form-control" id="productSearch" placeholder="Search for products" />
+                                <select className='form-control' id='productSelect' name='productSelect' onChange={handleChange3} value={form3Data.productSelect}>
+                                    <AllProducts />
+                                </select>
                             </div>
                             <div className="col-md-2 mb-3">
                                 <label htmlFor="quantity" className="form-label">Quantity</label>
-                                <input type="number" className="form-control" id="quantity" defaultValue="1" />
+                                <input type="number" className="form-control" id="quantity" defaultValue="1" name='quantity' onChange={handleChange3}/>
                             </div>
                             <div className="col-md-2 mb-3">
                                 <label htmlFor="unitPrice" className="form-label">Unit Price</label>
-                                <input type="text" className="form-control" id="unitPrice" value="$100.00" readOnly />
+                                <input type="text" className="form-control" id="unitPrice" value={form3Data.price} name='price' readOnly />
                             </div>
                             <div className="col-md-2 mb-3 d-flex align-items-end">
                                 <button className="btn btn-success w-100">Add</button>
@@ -234,7 +301,7 @@ const CreateOrder = () => {
                             </tbody>
                         </table>
 
-                        <button className="btn btn-primary">Add More Products</button>
+                        <button className="btn btn-primary" onClick={() => console.log(form3Data)}>Add More Products</button>
                     </div>
                 </div>
 

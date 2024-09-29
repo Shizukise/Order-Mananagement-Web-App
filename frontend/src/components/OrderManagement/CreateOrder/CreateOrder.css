@@ -111,6 +111,10 @@
     background-color: #f2f2f2; /* Light background for headers */
 }
 
+#productSelect {
+    padding: 0% !important;
+}
+
 /* Media Query for Responsive Adjustments */
 @media (max-width: 768px) {
     .product-details .row {

@@ -1,3 +1,4 @@
+from sqlalchemy import Nullable, null
 from backend import db, bcrypt, login_manager
 from flask_login import UserMixin
 
@@ -28,3 +29,13 @@ class User(db.Model,UserMixin):
     
     def get_id(self):
         return str(self.user_id)
+    
+
+class Product(db.Model):
+
+    __tablename__ = 'products'
+
+    product_id = db.Column(db.Integer(), unique=True,primary_key= True)
+    product_ref = db.Column(db.String(15),nullable = False, unique= True)
+    product_name = db.Column(db.String(30), nullable = False, unique= True)
+    product_price = db.Column(db.Integer(), nullable = False)

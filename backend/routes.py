@@ -1,5 +1,5 @@
 from backend import app,bcrypt,db
-from backend.models import User
+from backend.models import Product, User
 from flask import render_template, request, jsonify, session
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -37,5 +37,12 @@ def logout():
     logout_user()
     return jsonify({"message":"Logout successful"}), 200
 
-
+#Get all products endpoint
+@app.route('/getallproducts',methods=['GET'])
+@login_required
+def getAllProducts():
+    allProducts = Product.query.all()
+    structured = [[i.product_name, i.product_price] for i in allProducts]
+    print(structured)
+    return jsonify(structured),200
 
