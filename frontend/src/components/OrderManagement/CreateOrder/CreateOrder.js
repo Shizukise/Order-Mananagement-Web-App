@@ -1,11 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ManagementNav from '../ManagementNav/Managementnav';
 import { useAuth } from '../../../contexts/AuthContext';
 import './CreateOrder.css'; // Assuming you have a CSS file for this component
 
 const CreateOrder = () => {
     const { user } = useAuth()
+    const [form1Data, setForm1Data] = useState({
+        creatorEmail: '',
+        customerName: '',
+        companyName: '',
+        customerEmail: '',
+        customerPhone: '',
+        shippingAddress: '',
+        billingAddress: ''
+    });
+    const [form2Data, setForm2Data] = useState({
+        paymentMethod: 'Credit Card',
+        paymentTerms: '',
+        orderNotes: '',
+        deliveryMethod: 'Standard Shipping'    //here we have space for urgent delivery also
+    })
 
+
+    const handleChange1 = (e) => {
+        const { name, value } = e.target;
+        setForm1Data((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handleChange2 = (e) => {
+        const {name, value } = e.target;
+        setForm2Data((prevData) => ({
+            ...prevData,
+            [name]: value,
+        })); 
+    };
 
     return (
         <>
@@ -24,11 +55,19 @@ const CreateOrder = () => {
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="department" className="form-label">Department</label>
-                            <input type="text" className="form-control" id="department" value={user} readOnly />
+                            <input type="text" className="form-control" id="department" value={user/* ?.department || '' */} readOnly />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="creatorEmail" className="form-label">Email</label>
-                            <input type="email" className="form-control" id="creatorEmail" placeholder='name@example.com' />
+                            <input 
+                                type="email" 
+                                className="form-control" 
+                                id="creatorEmail" 
+                                placeholder='name@example.com' 
+                                value={form1Data.creatorEmail}
+                                onChange={handleChange1} 
+                                name="creatorEmail" 
+                            />
                         </div>
                     </div>
 
@@ -37,27 +76,75 @@ const CreateOrder = () => {
                         <div className="section-title">Customer Details</div>
                         <div className="form-group mb-3">
                             <label htmlFor="customerName" className="form-label">Customer Name</label>
-                            <input type="text" className="form-control" id="customerName" placeholder="Enter customer name" />
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                id="customerName" 
+                                placeholder="Enter customer name"  
+                                value={form1Data.customerName}
+                                onChange={handleChange1}
+                                name="customerName" 
+                            />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="companyName" className="form-label">Company Name</label>
-                            <input type="text" className="form-control" id="companyName" placeholder="Enter company name" />
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                id="companyName" 
+                                placeholder="Enter company name" 
+                                value={form1Data.companyName}
+                                onChange={handleChange1}
+                                name="companyName" 
+                            />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="customerEmail" className="form-label">Email</label>
-                            <input type="email" className="form-control" id="customerEmail" placeholder="Enter customer email" />
+                            <input 
+                                type="email" 
+                                className="form-control" 
+                                id="customerEmail" 
+                                placeholder="Enter customer email" 
+                                value={form1Data.customerEmail}
+                                onChange={handleChange1}
+                                name="customerEmail" 
+                            />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="customerPhone" className="form-label">Phone Number</label>
-                            <input type="text" className="form-control" id="customerPhone" placeholder="Enter phone number" />
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                id="customerPhone" 
+                                placeholder="Enter phone number" 
+                                value={form1Data.customerPhone}
+                                onChange={handleChange1}
+                                name="customerPhone" 
+                            />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="shippingAddress" className="form-label">Shipping Address</label>
-                            <textarea className="form-control" id="shippingAddress" rows="2" placeholder="Enter shipping address"></textarea>
+                            <textarea 
+                                className="form-control" 
+                                id="shippingAddress" 
+                                rows="2" 
+                                placeholder="Enter shipping address" 
+                                value={form1Data.shippingAddress}
+                                onChange={handleChange1}
+                                name="shippingAddress" 
+                            ></textarea>
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="billingAddress" className="form-label">Billing Address</label>
-                            <textarea className="form-control" id="billingAddress" rows="2" placeholder="Enter billing address"></textarea>
+                            <textarea 
+                                className="form-control" 
+                                id="billingAddress" 
+                                rows="2" 
+                                placeholder="Enter billing address" 
+                                value={form1Data.billingAddress}
+                                onChange={handleChange1}
+                                name="billingAddress" 
+                            ></textarea>
                         </div>
                     </div>
                 </div>
@@ -69,7 +156,7 @@ const CreateOrder = () => {
                         <div className="section-title">Payment Info</div>
                         <div className="form-group mb-3">
                             <label htmlFor="paymentMethod" className="form-label">Payment Method</label>
-                            <select className="form-control" id="paymentMethod">
+                            <select className="form-control" id="paymentMethod" onChange={handleChange2} name='paymentMethod'>
                                 <option>Credit Card</option>
                                 <option>PayPal</option>
                                 <option>Bank Transfer</option>
@@ -77,7 +164,8 @@ const CreateOrder = () => {
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="paymentTerms" className="form-label">Payment Terms</label>
-                            <input type="text" className="form-control" id="paymentTerms" placeholder="e.g., Net 30 days" />
+                            <input type="text" className="form-control" id="paymentTerms" placeholder="e.g., Net 30 days" value={form2Data.paymentTerms} 
+                                onChange={handleChange2} name='paymentTerms'/>
                         </div>
                     </div>
 
@@ -86,11 +174,12 @@ const CreateOrder = () => {
                         <div className="section-title">Additional Info</div>
                         <div className="form-group mb-3">
                             <label htmlFor="orderNotes" className="form-label">Order Notes</label>
-                            <textarea className="form-control" id="orderNotes" rows="3" placeholder="Add any notes for this order"></textarea>
+                            <textarea className="form-control" id="orderNotes" rows="3" placeholder="Add any notes for this order" name='orderNotes'
+                                value={form2Data.orderNotes} onChange={handleChange2}></textarea>
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="deliveryMethod" className="form-label">Delivery Method</label>
-                            <select className="form-control" id="deliveryMethod">
+                            <select className="form-control" id="deliveryMethod" name='deliveryMethod' onChange={handleChange2}>
                                 <option>Standard Shipping</option>
                                 <option>Express Shipping</option>
                                 <option>Pickup</option>
