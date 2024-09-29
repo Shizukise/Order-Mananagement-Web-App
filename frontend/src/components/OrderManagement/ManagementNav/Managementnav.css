@@ -1,43 +1,42 @@
-/* ManagementNav.css */
-
+/* ManagementNav styles */
 #ManagementNav {
     display: flex;
-    justify-content: flex-start; /* Align items to the left */
+    justify-content: flex-start;
     align-items: center;
-    background-color: #003366; /* Navy Blue - Primary Color */
+    background-color: #003366;
     padding: 5px 20px;
-    border-bottom: 2px solid #009688; /* Teal - Secondary Color */
+    border-bottom: 2px solid #009688;
+    position: fixed;
+    top: 60px; /* Positioned below the MainNavbar */
+    width: 100%;
+    z-index: 999;
+    height: 50px; /* Define height for consistent spacing */
 }
 
+/* Individual nav link styles */
 .mngmntnav {
-    color: white; /* Text color */
-    text-decoration: none; /* Remove underline */
-    padding: 5px 15px; /* Padding around links */
-    margin-right: 20px; /* Space between links */
-    transition: color 0.3s ease; /* Smooth transition for color change */
+    color: white;
+    text-decoration: none;
+    padding: 5px 15px;
+    margin-right: 20px;
+    transition: color 0.3s ease;
 }
 
 .mngmntnav:hover {
-    color: rgba(255, 255, 255, 0.8); /* Change color on hover */
-    text-decoration: none !important;
-}
-
-.mngmntnav-active {
-    font-weight: bold; /* Bold text for active link */
-    text-decoration: underline !important; /* Underline active link */
+    color: rgba(255, 255, 255, 0.8);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
     #ManagementNav {
-        flex-direction: column; /* Stack links vertically on smaller screens */
-        align-items: flex-start; /* Align links to the start */
-        padding: 10px; /* Increased padding for touch targets */
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
     }
 
     .mngmntnav {
-        width: 100%; /* Make links take full width */
-        margin-right: 0; /* Reset right margin */
-        margin-bottom: 10px; /* Space between links */
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
     }
 }

@@ -16,6 +16,7 @@ const Navbar = () => {
     
         if (response.ok) {
             navigate('/')
+            window.location.reload();
         } else {
             console.error('Logout failed');
         }

@@ -1,15 +1,21 @@
 /* Main Navbar styles */
 #MainNavbar {
     background-color: #003366; /* Navy Blue - Primary Color */
+    position: fixed; /* Keep it fixed at the top */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    width: 100%; /* Full width */
+    z-index: 1000; /* Ensure it’s above other content */
+    height: 60px; /* Set a fixed height */
 }
 
 /* Navbar Item styles */
 .navbar-nav {
-    margin-left: auto; /* Ensure the nav items are right-aligned */
+    margin-left: auto;
 }
 
 .navbar-brand {
-    color: white; /* White for the brand name */
+    color: white;
 }
 
 .navbar-brand:hover {
@@ -17,20 +23,13 @@
 }
 
 .nav-item {
-    margin-left: 20px; /* Space between nav items */
+    margin-left: 20px;
 }
 
 .nav-link {
-    color: #ffffff; /* Set a color for links */
-    text-decoration: none; /* Remove underline */
+    color: #ffffff;
 }
 
 .nav-link:hover {
-    color: #00f7ff; /* Light Teal on hover */
-}
-
-/* Dropdown Menu styles */
-.dropdown-menu {
-    left: auto; /* Ensure dropdown aligns properly */
-    right: 0; /* Align dropdown to the right */
+    color: #00f7ff;
 }
