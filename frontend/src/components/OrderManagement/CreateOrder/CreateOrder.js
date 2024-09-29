@@ -7,7 +7,6 @@ const CreateOrder = () => {
     const { user } = useAuth()
     const [products,setProducts] = useState(null)
     const [loading,setLoading] = useState(true)
-    const [currentOrderProducts, setCurrentOrderProducts] = useState(null)
     const [form1Data, setForm1Data] = useState({
         creatorEmail: '',
         customerName: '',
@@ -54,19 +53,27 @@ const CreateOrder = () => {
                 currentPrice = product[1];
                 break;
             }
-        }
+        };
         const totalPrice = currentPrice * form3Data.quantity
         setForm3Data((prevData) => ({
             ...prevData,
             [name]: value,
             ["price"]: `${totalPrice}.00€`,
-        }))
-        } else {
+        }));
+        } else if (name === "quantity") {
+            let currentUnitPrice 
+            for (const product of products) {
+                if (product[0] === form3Data.productSelect) {
+                    currentUnitPrice = product[1]
+                    break;
+                }
+            }
             setForm3Data((prevData) => ({
                 ...prevData,
                 [name]: value,
+                ["price"] : `${currentUnitPrice*value}.00€`,      
             }))
-        }
+        };
     }
 
 
@@ -271,7 +278,7 @@ const CreateOrder = () => {
                                 <input type="number" className="form-control" id="quantity" defaultValue="1" name='quantity' onChange={handleChange3}/>
                             </div>
                             <div className="col-md-2 mb-3">
-                                <label htmlFor="unitPrice" className="form-label">Unit Price</label>
+                                <label htmlFor="unitPrice" className="form-label">Total price</label>
                                 <input type="text" className="form-control" id="unitPrice" value={form3Data.price} name='price' readOnly />
                             </div>
                             <div className="col-md-2 mb-3 d-flex align-items-end">
