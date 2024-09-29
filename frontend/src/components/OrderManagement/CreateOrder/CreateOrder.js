@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ManagementNav from '../ManagementNav/Managementnav';
 import { useAuth } from '../../../contexts/AuthContext';
 import './CreateOrder.css'; // Assuming you have a CSS file for this component
@@ -7,6 +7,8 @@ const CreateOrder = () => {
     const { user } = useAuth()
     const [products,setProducts] = useState(null)
     const [loading,setLoading] = useState(true)
+    const [currentOrderItems,setCurrentOrderItems] = useState([])
+    const quantity = useRef()
     const [form1Data, setForm1Data] = useState({
         creatorEmail: '',
         customerName: '',
@@ -24,7 +26,9 @@ const CreateOrder = () => {
     })
     const [form3Data, setForm3Data] = useState({
         productSelect: '',
-        quantity: '1',
+        productRef: '',
+        productPrice: '',
+        quantity: 1,
         price: 0
     })
     
@@ -46,11 +50,13 @@ const CreateOrder = () => {
     };
     const handleChange3 = (e) => {
         const {name, value } = e.target;
-        let currentPrice 
+        let currentPrice
+        let currentRef
         if (name !== "quantity") {
         for (const product of products) {
             if (product[0] === value) {
-                currentPrice = product[1];
+                currentPrice = product[2];
+                currentRef = product[1]
                 break;
             }
         };
@@ -58,13 +64,15 @@ const CreateOrder = () => {
         setForm3Data((prevData) => ({
             ...prevData,
             [name]: value,
+            ['productPrice'] : currentPrice,
             ["price"]: `${totalPrice}.00€`,
+            ['productRef'] : currentRef
         }));
         } else if (name === "quantity") {
             let currentUnitPrice 
             for (const product of products) {
                 if (product[0] === form3Data.productSelect) {
-                    currentUnitPrice = product[1]
+                    currentUnitPrice = product[2]
                     break;
                 }
             }
@@ -76,6 +84,18 @@ const CreateOrder = () => {
         };
     }
 
+
+    const handleAddBtn = () => {
+        setCurrentOrderItems([...currentOrderItems,form3Data])
+        setForm3Data({
+            productSelect: '',
+            productRef: '',
+            productPrice: '',
+            quantity: 1,
+            price: 0
+        });
+        quantity.current.value = 1
+    };
 
     useEffect(() => {
         async function fetchProducts() {
@@ -275,14 +295,14 @@ const CreateOrder = () => {
                             </div>
                             <div className="col-md-2 mb-3">
                                 <label htmlFor="quantity" className="form-label">Quantity</label>
-                                <input type="number" className="form-control" id="quantity" defaultValue="1" name='quantity' onChange={handleChange3}/>
+                                <input type="number" className="form-control" id="quantity" defaultValue="1" name='quantity' onChange={handleChange3} ref={quantity}/>
                             </div>
                             <div className="col-md-2 mb-3">
                                 <label htmlFor="unitPrice" className="form-label">Total price</label>
                                 <input type="text" className="form-control" id="unitPrice" value={form3Data.price} name='price' readOnly />
                             </div>
                             <div className="col-md-2 mb-3 d-flex align-items-end">
-                                <button className="btn btn-success w-100">Add</button>
+                                <button className="btn btn-success w-100" onClick={() => handleAddBtn()}>Add</button>
                             </div>
                         </div>
 

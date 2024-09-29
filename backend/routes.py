@@ -42,7 +42,7 @@ def logout():
 @login_required
 def getAllProducts():
     allProducts = Product.query.all()
-    structured = [[i.product_name, i.product_price] for i in allProducts]
+    structured = [[i.product_name,i.product_ref, i.product_price] for i in allProducts]
     print(structured)
     return jsonify(structured),200
 
