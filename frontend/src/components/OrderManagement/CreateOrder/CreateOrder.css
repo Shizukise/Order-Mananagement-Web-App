@@ -74,12 +74,58 @@
 }
 
 /* Product Details */
+/* Product Details Section */
 .product-details {
-    width: 100%;
-    background-color: #ffffff;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    width: 100%; /* Full width */
+    background-color: #ffffff; /* White background */
+    padding: 15px; /* Padding for the card */
+    border: 1px solid #ddd; /* Border for the card */
+    border-radius: 5px; /* Rounded corners */
+}
+
+/* Responsive Input Fields */
+.product-details input {
+    width: 100%; /* Full width on smaller screens */
+    margin-bottom: 15px; /* Space between inputs */
+}
+
+/* Responsive button styling */
+.product-details button {
+    width: 100%; /* Full width */
+}
+
+/* Table styling */
+.product-details table {
+    width: 100%; /* Full width table */
+    margin-top: 15px; /* Space above the table */
+    border-collapse: collapse; /* Collapse borders */
+}
+
+.product-details th,
+.product-details td {
+    text-align: left; /* Align text to the left */
+    padding: 8px; /* Padding for table cells */
+}
+
+.product-details th {
+    background-color: #f2f2f2; /* Light background for headers */
+}
+
+/* Media Query for Responsive Adjustments */
+@media (max-width: 768px) {
+    .product-details .row {
+        flex-direction: column; /* Stack inputs vertically */
+    }
+
+    .product-details .col-md-2,
+    .product-details .col-md-6 {
+        width: 100%; /* Full width for smaller screens */
+        margin-bottom: 15px; /* Space between rows */
+    }
+
+    .product-details .col-md-2.d-flex {
+        justify-content: center; /* Center the Add button */
+    }
 }
 
 .product-details input {
@@ -124,27 +170,54 @@ textarea {
     width: 100%;
 }
 
-/* Order Summary */
-.order-summary {
-    width: 100%;
-    background-color: #ffffff;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-top: 30px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
+.order-summary-card {
+    max-width: 800px; /* Maximum width for larger screens */
+    width: 100%;      /* Full width on smaller screens */
+    margin: 20px auto; /* Center the card with some margin */
 }
 
+.order-summary {
+    padding: 20px;    /* Add padding inside the summary */
+    border-radius: 8px; /* Optional: rounded corners */
+    background-color: #f8f9fa; /* Light background for contrast */
+}
+
+.order-summary p {
+    font-size: 1rem; /* Base font size */
+    margin: 8px 0; /* Space between items */
+}
+
+.order-summary h5 {
+    font-size: 1.2rem; /* Larger font size for total */
+    margin-top: 10px; /* Space above the total */
+    font-weight: bold; /* Bold for emphasis */
+}
+
+/* Media Query for Larger Screens */
+@media (min-width: 768px) {
+    .order-summary {
+        max-width: 600px; /* Wider content on larger screens */
+    }
+
+    .order-summary p,
+    .order-summary h5 {
+        font-size: 1.1rem; /* Slightly larger text on larger screens */
+    }
+}
+
+/* Style for summary items */
 .order-summary-item {
     padding: 10px 0;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ccc; /* Light border for separation */
 }
 
+/* Additional class for total emphasis */
 .order-summary-total {
     font-weight: bold;
+    font-size: 1.2rem; /* Larger total */
+    margin-top: 15px; /* Space above */
 }
+
 
 .order-actions {
     text-align: right;

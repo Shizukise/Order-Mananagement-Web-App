@@ -62,6 +62,45 @@ const CreateOrder = () => {
                     </div>
                 </div>
 
+                {/* Payment Info and Additional Info Section */}
+                <div className="order-section payment-additional-info">
+                    {/* Payment Info */}
+                    <div className="payment-info">
+                        <div className="section-title">Payment Info</div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="paymentMethod" className="form-label">Payment Method</label>
+                            <select className="form-control" id="paymentMethod">
+                                <option>Credit Card</option>
+                                <option>PayPal</option>
+                                <option>Bank Transfer</option>
+                            </select>
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="paymentTerms" className="form-label">Payment Terms</label>
+                            <input type="text" className="form-control" id="paymentTerms" placeholder="e.g., Net 30 days" />
+                        </div>
+                    </div>
+
+                    {/* Additional Info */}
+                    <div className="additional-info">
+                        <div className="section-title">Additional Info</div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="orderNotes" className="form-label">Order Notes</label>
+                            <textarea className="form-control" id="orderNotes" rows="3" placeholder="Add any notes for this order"></textarea>
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="deliveryMethod" className="form-label">Delivery Method</label>
+                            <select className="form-control" id="deliveryMethod">
+                                <option>Standard Shipping</option>
+                                <option>Express Shipping</option>
+                                <option>Pickup</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+
                 {/* Product Details Section */}
                 <div className="card mb-4 product-details">
                     <div className="card-header bg-primary text-white">Product Details</div>
@@ -110,65 +149,20 @@ const CreateOrder = () => {
                     </div>
                 </div>
 
-                {/* Payment Info and Additional Info Section */}
-                <div className="order-section payment-additional-info">
-                    {/* Payment Info */}
-                    <div className="payment-info">
-                        <div className="section-title">Payment Info</div>
-                        <div className="form-group mb-3">
-                            <label htmlFor="paymentMethod" className="form-label">Payment Method</label>
-                            <select className="form-control" id="paymentMethod">
-                                <option>Credit Card</option>
-                                <option>PayPal</option>
-                                <option>Bank Transfer</option>
-                            </select>
-                        </div>
-                        <div className="form-group mb-3">
-                            <label htmlFor="paymentTerms" className="form-label">Payment Terms</label>
-                            <input type="text" className="form-control" id="paymentTerms" placeholder="e.g., Net 30 days" />
-                        </div>
-                    </div>
-
-                    {/* Additional Info */}
-                    <div className="additional-info">
-                        <div className="section-title">Additional Info</div>
-                        <div className="form-group mb-3">
-                            <label htmlFor="orderNotes" className="form-label">Order Notes</label>
-                            <textarea className="form-control" id="orderNotes" rows="3" placeholder="Add any notes for this order"></textarea>
-                        </div>
-                        <div className="form-group mb-3">
-                            <label htmlFor="deliveryMethod" className="form-label">Delivery Method</label>
-                            <select className="form-control" id="deliveryMethod">
-                                <option>Standard Shipping</option>
-                                <option>Express Shipping</option>
-                                <option>Pickup</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
 
                 {/* Order Summary Section */}
-                <div className="card mb-4 order-summary">
+                <div className="card mb-4 order-summary-card">
                     <div className="card-header bg-primary text-white">Order Summary</div>
                     <div className="card-body">
-                        <table className="table">
-                            <tbody>
-                                <tr>
-                                    <td>Product 1: Widget</td>
-                                    <td>$200.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Shipping Fee</td>
-                                    <td>$20.00</td>
-                                </tr>
-                                <tr>
-                                    <th>Total</th>
-                                    <th>$220.00</th>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div className="order-summary">
+                            <p className="order-summary-item">Product 1: Widget</p>
+                            <p className="order-summary-item">Price: $200.00</p>
+                            <p className="order-summary-item">Shipping Fee: $20.00</p>
+                            <h5 className="order-summary-total">Total: $220.00</h5>
+                        </div>
                     </div>
                 </div>
+
 
                 {/* Action Buttons */}
                 <div className="d-flex justify-content-end order-actions mb-4">
