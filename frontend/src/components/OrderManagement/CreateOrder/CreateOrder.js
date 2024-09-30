@@ -5,9 +5,9 @@ import './CreateOrder.css'; // Assuming you have a CSS file for this component
 
 const CreateOrder = () => {
     const { user } = useAuth()
-    const [products,setProducts] = useState(null)
-    const [loading,setLoading] = useState(true)
-    const [currentOrderItems,setCurrentOrderItems] = useState([])
+    const [products, setProducts] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [currentOrderItems, setCurrentOrderItems] = useState([])
     const quantity = useRef()
     const [form1Data, setForm1Data] = useState({
         creatorEmail: '',
@@ -31,7 +31,7 @@ const CreateOrder = () => {
         quantity: 1,
         price: 0
     })
-    
+
 
     const handleChange1 = (e) => {
         const { name, value } = e.target;
@@ -42,34 +42,34 @@ const CreateOrder = () => {
     };
 
     const handleChange2 = (e) => {
-        const {name, value } = e.target;
+        const { name, value } = e.target;
         setForm2Data((prevData) => ({
             ...prevData,
             [name]: value,
-        })); 
+        }));
     };
     const handleChange3 = (e) => {
-        const {name, value } = e.target;
+        const { name, value } = e.target;
         let currentPrice
         let currentRef
         if (name !== "quantity") {
-        for (const product of products) {
-            if (product[0] === value) {
-                currentPrice = product[2];
-                currentRef = product[1]
-                break;
-            }
-        };
-        const totalPrice = currentPrice * form3Data.quantity
-        setForm3Data((prevData) => ({
-            ...prevData,
-            [name]: value,
-            ['productPrice'] : currentPrice,
-            ["price"]: `${totalPrice}.00€`,
-            ['productRef'] : currentRef
-        }));
+            for (const product of products) {
+                if (product[0] === value) {
+                    currentPrice = product[2];
+                    currentRef = product[1]
+                    break;
+                }
+            };
+            const totalPrice = currentPrice * form3Data.quantity
+            setForm3Data((prevData) => ({
+                ...prevData,
+                [name]: value,
+                productPrice: currentPrice,
+                price: totalPrice,
+                productRef: currentRef
+            }));
         } else if (name === "quantity") {
-            let currentUnitPrice 
+            let currentUnitPrice
             for (const product of products) {
                 if (product[0] === form3Data.productSelect) {
                     currentUnitPrice = product[2]
@@ -79,23 +79,27 @@ const CreateOrder = () => {
             setForm3Data((prevData) => ({
                 ...prevData,
                 [name]: value,
-                ["price"] : `${currentUnitPrice*value}.00€`,      
+                price: currentUnitPrice * value,
             }))
         };
     }
 
 
     const handleAddBtn = () => {
-        setCurrentOrderItems([...currentOrderItems,form3Data])
+        setCurrentOrderItems([...currentOrderItems, form3Data])
         setForm3Data({
             productSelect: '',
             productRef: '',
             productPrice: '',
             quantity: 1,
-            price: 0
+            price: 0                     //need validations for this, not adding without product selected or anything
         });
         quantity.current.value = 1
     };
+    
+
+
+
 
     useEffect(() => {
         async function fetchProducts() {
@@ -111,16 +115,16 @@ const CreateOrder = () => {
         }
         fetchProducts()
     }, []);
-    
+
     if (loading) {
         return <p>Loading products...</p>;
     }
-    
+
     if (!products) {
         return <p>error loading item</p>
     }
 
-    
+
 
     function AllProducts() {
         return products.map(product => (
@@ -129,6 +133,26 @@ const CreateOrder = () => {
             </option>
         ));
     };
+
+    function AllProductsOrdered() {
+
+        const deleteItem = (indexToDelete) => {
+            const updatedOrder = currentOrderItems.filter((_, index) => index !== indexToDelete);
+            setCurrentOrderItems(updatedOrder);
+        };
+
+        return currentOrderItems.map((each, index) => (
+            <tr key={each.productRef || index}> 
+                <td>{each.productRef}</td> 
+                <td>{each.productSelect}</td> 
+                <td>{each.quantity}</td> 
+                <td>{each.productPrice}.00€</td>  
+                <td>{each.price}.00€</td>
+                <td><button className="DeleteArticleBtn" onClick={() => deleteItem(index)}><i class="bi bi-x-lg"></i></button></td>
+            </tr>
+        ));
+    }
+    
 
 
     return (
@@ -152,14 +176,14 @@ const CreateOrder = () => {
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="creatorEmail" className="form-label">Email</label>
-                            <input 
-                                type="email" 
-                                className="form-control" 
-                                id="creatorEmail" 
-                                placeholder='name@example.com' 
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="creatorEmail"
+                                placeholder='name@example.com'
                                 value={form1Data.creatorEmail}
-                                onChange={handleChange1} 
-                                name="creatorEmail" 
+                                onChange={handleChange1}
+                                name="creatorEmail"
                             />
                         </div>
                     </div>
@@ -169,74 +193,74 @@ const CreateOrder = () => {
                         <div className="section-title">Customer Details</div>
                         <div className="form-group mb-3">
                             <label htmlFor="customerName" className="form-label">Customer Name</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                id="customerName" 
-                                placeholder="Enter customer name"  
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="customerName"
+                                placeholder="Enter customer name"
                                 value={form1Data.customerName}
                                 onChange={handleChange1}
-                                name="customerName" 
+                                name="customerName"
                             />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="companyName" className="form-label">Company Name</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                id="companyName" 
-                                placeholder="Enter company name" 
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="companyName"
+                                placeholder="Enter company name"
                                 value={form1Data.companyName}
                                 onChange={handleChange1}
-                                name="companyName" 
+                                name="companyName"
                             />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="customerEmail" className="form-label">Email</label>
-                            <input 
-                                type="email" 
-                                className="form-control" 
-                                id="customerEmail" 
-                                placeholder="Enter customer email" 
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="customerEmail"
+                                placeholder="Enter customer email"
                                 value={form1Data.customerEmail}
                                 onChange={handleChange1}
-                                name="customerEmail" 
+                                name="customerEmail"
                             />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="customerPhone" className="form-label">Phone Number</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                id="customerPhone" 
-                                placeholder="Enter phone number" 
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="customerPhone"
+                                placeholder="Enter phone number"
                                 value={form1Data.customerPhone}
                                 onChange={handleChange1}
-                                name="customerPhone" 
+                                name="customerPhone"
                             />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="shippingAddress" className="form-label">Shipping Address</label>
-                            <textarea 
-                                className="form-control" 
-                                id="shippingAddress" 
-                                rows="2" 
-                                placeholder="Enter shipping address" 
+                            <textarea
+                                className="form-control"
+                                id="shippingAddress"
+                                rows="2"
+                                placeholder="Enter shipping address"
                                 value={form1Data.shippingAddress}
                                 onChange={handleChange1}
-                                name="shippingAddress" 
+                                name="shippingAddress"
                             ></textarea>
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="billingAddress" className="form-label">Billing Address</label>
-                            <textarea 
-                                className="form-control" 
-                                id="billingAddress" 
-                                rows="2" 
-                                placeholder="Enter billing address" 
+                            <textarea
+                                className="form-control"
+                                id="billingAddress"
+                                rows="2"
+                                placeholder="Enter billing address"
                                 value={form1Data.billingAddress}
                                 onChange={handleChange1}
-                                name="billingAddress" 
+                                name="billingAddress"
                             ></textarea>
                         </div>
                     </div>
@@ -257,8 +281,8 @@ const CreateOrder = () => {
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="paymentTerms" className="form-label">Payment Terms</label>
-                            <input type="text" className="form-control" id="paymentTerms" placeholder="e.g., Net 30 days" value={form2Data.paymentTerms} 
-                                onChange={handleChange2} name='paymentTerms'/>
+                            <input type="text" className="form-control" id="paymentTerms" placeholder="e.g., Net 30 days" value={form2Data.paymentTerms}
+                                onChange={handleChange2} name='paymentTerms' />
                         </div>
                     </div>
 
@@ -295,11 +319,11 @@ const CreateOrder = () => {
                             </div>
                             <div className="col-md-2 mb-3">
                                 <label htmlFor="quantity" className="form-label">Quantity</label>
-                                <input type="number" className="form-control" id="quantity" defaultValue="1" name='quantity' onChange={handleChange3} ref={quantity}/>
+                                <input type="number" className="form-control" id="quantity" defaultValue="1" name='quantity' onChange={handleChange3} ref={quantity} />
                             </div>
                             <div className="col-md-2 mb-3">
                                 <label htmlFor="unitPrice" className="form-label">Total price</label>
-                                <input type="text" className="form-control" id="unitPrice" value={form3Data.price} name='price' readOnly />
+                                <input type="text" className="form-control" id="unitPrice" value={form3Data.price + ".00€"} name='price' readOnly />
                             </div>
                             <div className="col-md-2 mb-3 d-flex align-items-end">
                                 <button className="btn btn-success w-100" onClick={() => handleAddBtn()}>Add</button>
@@ -307,7 +331,7 @@ const CreateOrder = () => {
                         </div>
 
                         {/* Product List */}
-                        <table className="table table-striped">
+                        <table className="table table-hover">
                             <thead>
                                 <tr>
                                     <th scope="col">Product ID</th>
@@ -315,20 +339,13 @@ const CreateOrder = () => {
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Unit Price</th>
                                     <th scope="col">Total</th>
+                                    <th scope='col'></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1001</td>
-                                    <td>Widget</td>
-                                    <td>2</td>
-                                    <td>$100.00</td>
-                                    <td>$200.00</td>
-                                </tr>
+                                <AllProductsOrdered />
                             </tbody>
                         </table>
-
-                        <button className="btn btn-primary" onClick={() => console.log(form3Data)}>Add More Products</button>
                     </div>
                 </div>
 

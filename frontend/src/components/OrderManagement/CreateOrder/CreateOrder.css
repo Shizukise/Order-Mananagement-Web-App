@@ -84,9 +84,12 @@
 }
 
 /* Responsive Input Fields */
-.product-details input {
-    width: 100%; /* Full width on smaller screens */
+.product-details input,
+.product-details select {
+    width: 100%; /* Full width of the column */
+    padding: 8px; /* Add consistent padding */
     margin-bottom: 15px; /* Space between inputs */
+    box-sizing: border-box; /* Ensure padding and borders are included in width */
 }
 
 /* Responsive button styling */
@@ -111,8 +114,13 @@
     background-color: #f2f2f2; /* Light background for headers */
 }
 
+/* Flex alignment for the inputs and button */
+.product-details .row {
+    align-items: center; /* Align inputs vertically */
+}
+
 #productSelect {
-    padding: 0% !important;
+    padding: 8px; /* Ensure the select dropdown has consistent padding */
 }
 
 /* Media Query for Responsive Adjustments */
@@ -154,6 +162,10 @@
 .payment-additional-info {
     display: flex;
     justify-content: space-between;
+}
+
+#paymentMethod {
+    padding: 0 !important;
 }
 
 .payment-info,
@@ -281,4 +293,36 @@ textarea {
         width: 100%;
         margin-bottom: 20px;
     }
+}
+
+
+
+
+/* Delete Button Styling */
+.DeleteArticleBtn {
+    background-color: transparent; /* Transparent background */
+    border: none; /* No border */
+    color: #dc3545; /* Bootstrap Danger (red) color */
+    font-size: 1.2rem; /* Slightly larger font for visibility */
+    cursor: pointer; /* Pointer cursor to indicate clickability */
+    transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+    border-radius: 50%; /* Circular button */
+}
+
+/* Hover Effect */
+.DeleteArticleBtn:hover {
+    transform: scale(1.15);
+    color: #bd2130; /* Darker red for the icon on hover */
+}
+
+/* Focus Effect */
+.DeleteArticleBtn:focus {
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.5); /* Red focus ring */
+}
+
+/* Icon Styling */
+.DeleteArticleBtn i {
+    display: inline-block;
+    vertical-align: middle; /* Vertically center the icon */
 }
