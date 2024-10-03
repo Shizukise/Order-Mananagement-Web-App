@@ -9,6 +9,9 @@ const CreateOrder = () => {
     const [loading, setLoading] = useState(true)
     const [currentOrderItems, setCurrentOrderItems] = useState([])
     const quantity = useRef()
+    const selected = useRef()
+    const [summaryBill, setSummaryBill] = useState([])
+
     const [form1Data, setForm1Data] = useState({
         creatorEmail: '',
         customerName: '',
@@ -70,14 +73,19 @@ const CreateOrder = () => {
             }));
         } else if (name === "quantity") {
             let currentUnitPrice
+            let currentProductRef
             for (const product of products) {
                 if (product[0] === form3Data.productSelect) {
                     currentUnitPrice = product[2]
+                    currentProductRef = product[1]
                     break;
                 }
             }
             setForm3Data((prevData) => ({
                 ...prevData,
+                productSelect: selected.current.value,
+                productPrice: currentUnitPrice,
+                productRef : currentProductRef,
                 [name]: value,
                 price: currentUnitPrice * value,
             }))
@@ -94,12 +102,24 @@ const CreateOrder = () => {
             quantity: 1,
             price: 0                     //need validations for this, not adding without product selected or anything
         });
-        quantity.current.value = 1
+        quantity.current.value = 0
     };
-    
 
 
-
+    const handleGenerate = () => {
+        setSummaryBill(currentOrderItems)
+        console.log(summaryBill)
+    }
+    const BillData = () => {
+            return summaryBill.map((product) => (
+                <div className='order-summary' key={product['productRef']}>
+                    <p className="order-summary-item">Reference: {product['productRef']} -- {product['productSelect']} </p>
+                    <p className="order-summary-item">Unit Price: {product['productPrice']}.00€</p>
+                    <p className="order-summary-item">Quantity: {product['quantity']}</p>
+                    <h5 className="order-summary-total">Total: {product['price']}.00€</h5>
+                </div>
+            ))
+        }
 
     useEffect(() => {
         async function fetchProducts() {
@@ -142,17 +162,17 @@ const CreateOrder = () => {
         };
 
         return currentOrderItems.map((each, index) => (
-            <tr key={each.productRef || index}> 
-                <td>{each.productRef}</td> 
-                <td>{each.productSelect}</td> 
-                <td>{each.quantity}</td> 
-                <td>{each.productPrice}.00€</td>  
+            <tr key={each.productRef || index}>
+                <td>{each.productRef}</td>
+                <td>{each.productSelect}</td>
+                <td>{each.quantity}</td>
+                <td>{each.productPrice}.00€</td>
                 <td>{each.price}.00€</td>
-                <td><button className="DeleteArticleBtn" onClick={() => deleteItem(index)}><i class="bi bi-x-lg"></i></button></td>
+                <td><button className="DeleteArticleBtn" onClick={() => deleteItem(index)}><i className="bi bi-x-lg"></i></button></td>
             </tr>
         ));
     }
-    
+
 
 
     return (
@@ -313,7 +333,7 @@ const CreateOrder = () => {
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-6 mb-3">
-                                <select className='form-control' id='productSelect' name='productSelect' onChange={handleChange3} value={form3Data.productSelect}>
+                                <select className='form-control' id='productSelect' name='productSelect' onChange={handleChange3} value={form3Data.productSelect} ref={selected}>
                                     <AllProducts />
                                 </select>
                             </div>
@@ -352,14 +372,9 @@ const CreateOrder = () => {
 
                 {/* Order Summary Section */}
                 <div className="card mb-4 order-summary-card">
-                    <div className="card-header bg-primary text-white">Order Summary</div>
                     <div className="card-body">
-                        <div className="order-summary">
-                            <p className="order-summary-item">Product 1: Widget</p>
-                            <p className="order-summary-item">Price: $200.00</p>
-                            <p className="order-summary-item">Shipping Fee: $20.00</p>
-                            <h5 className="order-summary-total">Total: $220.00</h5>
-                        </div>
+                        <button className="btn btn-info w-100" onClick={() => handleGenerate()}>Generate summary bill</button>
+                        {summaryBill && <BillData data={summaryBill}/>}
                     </div>
                 </div>
 
