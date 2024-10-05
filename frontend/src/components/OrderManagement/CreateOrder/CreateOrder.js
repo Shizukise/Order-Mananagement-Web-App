@@ -108,7 +108,6 @@ const CreateOrder = () => {
 
     const handleGenerate = () => {
         setSummaryBill(currentOrderItems)
-        console.log(summaryBill)
     }
     const BillData = () => {
             return summaryBill.map((product) => (
@@ -121,6 +120,10 @@ const CreateOrder = () => {
             ))
         }
 
+    useEffect(() => {
+        handleGenerate()
+    },[currentOrderItems])
+    
     useEffect(() => {
         async function fetchProducts() {
             try {
@@ -372,8 +375,8 @@ const CreateOrder = () => {
 
                 {/* Order Summary Section */}
                 <div className="card mb-4 order-summary-card">
+                <div className="card-header bg-primary text-white">Order Summary</div>
                     <div className="card-body">
-                        <button className="btn btn-info w-100" onClick={() => handleGenerate()}>Generate summary bill</button>
                         {summaryBill && <BillData data={summaryBill}/>}
                     </div>
                 </div>
