@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ManagementNav from '../ManagementNav/Managementnav';
 import { useAuth } from '../../../contexts/AuthContext';
-import './CreateOrder.css'; // Assuming you have a CSS file for this component
+import './CreateOrder.css'; 
 
 const CreateOrder = () => {
     const { user } = useAuth()
@@ -35,13 +35,46 @@ const CreateOrder = () => {
         price: 0
     })
 
+    // Validation error states
+    const [errors, setErrors] = useState({
+        customerEmail: '',
+        customerPhone: '',
+        creatorEmail: '',
+    });
 
+    // Validation function for email
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    // Validation function for phone number
+    const validatePhoneNumber = (phone) => {
+        const phoneRegex = /^[0-9]{10,15}$/; // Allow only digits, 10-15 characters
+        return phoneRegex.test(phone);
+    };
+
+    // Handle form1 changes with validation
     const handleChange1 = (e) => {
         const { name, value } = e.target;
         setForm1Data((prevData) => ({
             ...prevData,
             [name]: value,
         }));
+
+        // Validate email and phone number in real-time
+        if (name === 'customerEmail' || name === 'creatorEmail') {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [name]: validateEmail(value) ? '' : 'Invalid email format',
+            }));
+        }
+        if (name === 'customerPhone') {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [name]: validatePhoneNumber(value) ? '' : 'Invalid phone number',
+            }));
+        }
     };
 
     const handleChange2 = (e) => {
@@ -71,6 +104,9 @@ const CreateOrder = () => {
                 price: totalPrice,
                 productRef: currentRef
             }));
+            if (name === "productSelect") {
+                setSelectedProductError('')
+            }
         } else if (name === "quantity") {
             let currentUnitPrice
             let currentProductRef
@@ -85,7 +121,7 @@ const CreateOrder = () => {
                 ...prevData,
                 productSelect: selected.current.value,
                 productPrice: currentUnitPrice,
-                productRef : currentProductRef,
+                productRef: currentProductRef,
                 [name]: value,
                 price: currentUnitPrice * value,
             }))
@@ -93,16 +129,26 @@ const CreateOrder = () => {
     }
 
 
+    const [selectedProductError,setSelectedProductError] = useState('')
+
     const handleAddBtn = () => {
-        setCurrentOrderItems([...currentOrderItems, form3Data])
-        setForm3Data({
-            productSelect: '',
-            productRef: '',
-            productPrice: '',
-            quantity: 1,
-            price: 0                     //need validations for this, not adding without product selected or anything
-        });
-        quantity.current.value = 0
+        if (selectedProductError === '' && form3Data.productSelect !== '') {
+            setCurrentOrderItems([...currentOrderItems, form3Data])
+            setForm3Data({
+                productSelect: '',
+                productRef: '',
+                productPrice: '',
+                quantity: 1,
+                price: 0                     
+            });
+            quantity.current.value = 0
+        } else {
+            setSelectedProductError((prevDATA) => ({
+                ...prevDATA,
+                error : 'Please select a product'
+            }))
+        };
+
     };
 
 
@@ -110,20 +156,20 @@ const CreateOrder = () => {
         setSummaryBill(currentOrderItems)
     }
     const BillData = () => {
-            return summaryBill.map((product) => (
-                <div className='order-summary' key={product['productRef']}>
-                    <p className="order-summary-item">Reference: {product['productRef']} -- {product['productSelect']} </p>
-                    <p className="order-summary-item">Unit Price: {product['productPrice']}.00€</p>
-                    <p className="order-summary-item">Quantity: {product['quantity']}</p>
-                    <h5 className="order-summary-total">Total: {product['price']}.00€</h5>
-                </div>
-            ))
-        }
+        return summaryBill.map((product) => (
+            <div className='order-summary' key={product['productRef']}>
+                <p className="order-summary-item">Reference: {product['productRef']} -- {product['productSelect']} </p>
+                <p className="order-summary-item">Unit Price: {product['productPrice']}.00€</p>
+                <p className="order-summary-item">Quantity: {product['quantity']}</p>
+                <h5 className="order-summary-total">Total: {product['price']}.00€</h5>
+            </div>
+        ))
+    }
 
     useEffect(() => {
         handleGenerate()
-    },[currentOrderItems])
-    
+    }, [currentOrderItems])
+
     useEffect(() => {
         async function fetchProducts() {
             try {
@@ -208,6 +254,7 @@ const CreateOrder = () => {
                                 onChange={handleChange1}
                                 name="creatorEmail"
                             />
+                            {errors.creatorEmail && <small className="text-danger">{errors.creatorEmail}</small>}
                         </div>
                     </div>
 
@@ -249,6 +296,7 @@ const CreateOrder = () => {
                                 onChange={handleChange1}
                                 name="customerEmail"
                             />
+                            {errors.customerEmail && <small className="text-danger">{errors.customerEmail}</small>}
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="customerPhone" className="form-label">Phone Number</label>
@@ -261,6 +309,7 @@ const CreateOrder = () => {
                                 onChange={handleChange1}
                                 name="customerPhone"
                             />
+                            {errors.customerPhone && <small className="text-danger">{errors.customerPhone}</small>}
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="shippingAddress" className="form-label">Shipping Address</label>
@@ -305,7 +354,7 @@ const CreateOrder = () => {
                         <div className="form-group mb-3">
                             <label htmlFor="paymentTerms" className="form-label">Payment Terms</label>
                             <input type="text" className="form-control" id="paymentTerms" placeholder="e.g., Net 30 days" value={form2Data.paymentTerms}
-                                onChange={handleChange2} name='paymentTerms' />
+                                onChange={handleChange2} name='paymentTerms' required />
                         </div>
                     </div>
 
@@ -339,6 +388,7 @@ const CreateOrder = () => {
                                 <select className='form-control' id='productSelect' name='productSelect' onChange={handleChange3} value={form3Data.productSelect} ref={selected}>
                                     <AllProducts />
                                 </select>
+                                {selectedProductError.error && <small className="text-danger">{selectedProductError.error}</small>}
                             </div>
                             <div className="col-md-2 mb-3">
                                 <label htmlFor="quantity" className="form-label">Quantity</label>
@@ -375,9 +425,9 @@ const CreateOrder = () => {
 
                 {/* Order Summary Section */}
                 <div className="card mb-4 order-summary-card">
-                <div className="card-header bg-primary text-white">Order Summary</div>
+                    <div className="card-header bg-primary text-white">Order Summary</div>
                     <div className="card-body">
-                        {summaryBill && <BillData data={summaryBill}/>}
+                        {summaryBill && <BillData data={summaryBill} />}
                     </div>
                 </div>
 
