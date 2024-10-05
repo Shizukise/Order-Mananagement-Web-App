@@ -26,7 +26,7 @@ def login():
     if user and bcrypt.check_password_hash(user.password_hash, password):
         login_user(user)
         session.permanent = True
-        return jsonify({"message": "Login successful", "user" : f"{user.username}"}), 200
+        return jsonify({"message": "Login successful", "user" : f"{user.username}", "department" : f"{user.type}"}), 200
     
     return jsonify({"message": "Invalid credentials"}), 401
 
