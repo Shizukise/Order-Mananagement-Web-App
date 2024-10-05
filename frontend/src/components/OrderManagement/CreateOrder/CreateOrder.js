@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ManagementNav from '../ManagementNav/Managementnav';
 import { useAuth } from '../../../contexts/AuthContext';
-import './CreateOrder.css'; 
+import './CreateOrder.css';
+
+
+
+
+
 
 const CreateOrder = () => {
     const { user } = useAuth()
@@ -11,6 +16,42 @@ const CreateOrder = () => {
     const quantity = useRef()
     const selected = useRef()
     const [summaryBill, setSummaryBill] = useState([])
+    const [errorModal, setErrorModal] = useState(null)
+
+
+
+    // Validation error states
+    const [errors, setErrors] = useState({
+        creatorEmail: '',       // Error for creator email
+        customerName: '',       // Error for customer name
+        customerEmail: '',      // Error for customer email
+        customerPhone: '',      // Error for customer phone
+        shippingAddress: '',     // Error for shipping address
+        billingAddress: '',      // Error for billing address
+    });
+
+    const ErrorModal = ({ title, message }) => {
+        return (
+            <>
+                <div className="modal fade show" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style={{ display: 'block' }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="staticBackdropLabel">{title}</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                {message}
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setErrorModal(null)}>Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    };
 
     const [form1Data, setForm1Data] = useState({
         creatorEmail: '',
@@ -34,13 +75,6 @@ const CreateOrder = () => {
         quantity: 1,
         price: 0
     })
-
-    // Validation error states
-    const [errors, setErrors] = useState({
-        customerEmail: '',
-        customerPhone: '',
-        creatorEmail: '',
-    });
 
     // Validation function for email
     const validateEmail = (email) => {
@@ -129,7 +163,7 @@ const CreateOrder = () => {
     }
 
 
-    const [selectedProductError,setSelectedProductError] = useState('')
+    const [selectedProductError, setSelectedProductError] = useState('')
 
     const handleAddBtn = () => {
         if (selectedProductError === '' && form3Data.productSelect !== '') {
@@ -139,13 +173,13 @@ const CreateOrder = () => {
                 productRef: '',
                 productPrice: '',
                 quantity: 1,
-                price: 0                     
+                price: 0
             });
             quantity.current.value = 0
         } else {
             setSelectedProductError((prevDATA) => ({
                 ...prevDATA,
-                error : 'Please select a product'
+                error: 'Please select a product'
             }))
         };
 
@@ -222,7 +256,48 @@ const CreateOrder = () => {
         ));
     }
 
+    const handleSubmit = () => {
+        const errors = {};
 
+        if (!form1Data.creatorEmail || !validateEmail(form1Data.creatorEmail)) {
+            errors.creatorEmail = 'Invalid or missing creator email';
+        }
+        if (!form1Data.customerName) {
+            errors.customerName = 'Customer name is required';
+        }
+        if (!form1Data.customerEmail || !validateEmail(form1Data.customerEmail)) {
+            errors.customerEmail = 'Invalid or missing customer email';
+        }
+        if (!form1Data.customerPhone || !validatePhoneNumber(form1Data.customerPhone)) {
+            errors.customerPhone = 'Invalid or missing customer phone';
+        }
+        if (!form1Data.shippingAddress) {
+            errors.shippingAddress = 'Shipping address is required';
+        }
+        if (!form1Data.billingAddress) {
+            errors.billingAddress = 'Billing address is required';
+        }
+        if (currentOrderItems.length === 0) {
+            errors.productSelect = 'At least one product must be added to the order';
+        }
+    
+        if (Object.keys(errors).length > 0) {
+            setErrors(errors);
+            setErrorModal({
+                title: 'Error Submitting Order',
+                message: 'Please fill all the required fields correctly.',
+            });
+            return;
+        }
+    
+        //Send order to backend here
+        
+        setErrorModal({
+            title: 'Order Submitted',
+            message: 'Your order has been successfully submitted!',
+        });
+    };
+    
 
     return (
         <>
@@ -272,6 +347,7 @@ const CreateOrder = () => {
                                 onChange={handleChange1}
                                 name="customerName"
                             />
+                            {errors.customerName && <small className="text-danger">{errors.customerName}</small>}
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="companyName" className="form-label">Company Name</label>
@@ -322,6 +398,7 @@ const CreateOrder = () => {
                                 onChange={handleChange1}
                                 name="shippingAddress"
                             ></textarea>
+                            {errors.shippingAddress && <small className="text-danger">{errors.shippingAddress}</small>}
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="billingAddress" className="form-label">Billing Address</label>
@@ -334,6 +411,7 @@ const CreateOrder = () => {
                                 onChange={handleChange1}
                                 name="billingAddress"
                             ></textarea>
+                            {errors.billingAddress && <small className="text-danger">{errors.billingAddress}</small>}
                         </div>
                     </div>
                 </div>
@@ -428,14 +506,17 @@ const CreateOrder = () => {
                     <div className="card-header bg-primary text-white">Order Summary</div>
                     <div className="card-body">
                         {summaryBill && <BillData data={summaryBill} />}
+                        {errors.productSelect && <small className="text-danger">{errors.productSelect}</small>}
                     </div>
                 </div>
 
 
+                {errorModal && <ErrorModal title={errorModal.title} message={errorModal.message} />}
+
                 {/* Action Buttons */}
                 <div className="d-flex justify-content-end order-actions mb-4">
                     <button className="btn btn-secondary mx-2 save-draft-btn">Save Draft</button>
-                    <button className="btn btn-primary mx-2 submit-order-btn">Submit Order</button>
+                    <button className="btn btn-primary mx-2 submit-order-btn" onClick={() => handleSubmit()}>Submit Order</button>
                     <button className="btn btn-danger mx-2 cancel-btn">Cancel</button>
                 </div>
 

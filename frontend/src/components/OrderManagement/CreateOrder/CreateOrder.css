@@ -306,7 +306,6 @@ textarea {
     font-size: 1.2rem; /* Slightly larger font for visibility */
     cursor: pointer; /* Pointer cursor to indicate clickability */
     transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transition */
-    border-radius: 50%; /* Circular button */
 }
 
 /* Hover Effect */
@@ -315,11 +314,7 @@ textarea {
     color: #bd2130; /* Darker red for the icon on hover */
 }
 
-/* Focus Effect */
-.DeleteArticleBtn:focus {
-    outline: none; /* Remove default outline */
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.5); /* Red focus ring */
-}
+
 
 /* Icon Styling */
 .DeleteArticleBtn i {
