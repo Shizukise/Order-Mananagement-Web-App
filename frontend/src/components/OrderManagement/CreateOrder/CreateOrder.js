@@ -17,6 +17,7 @@ const CreateOrder = () => {
     const selected = useRef()
     const [summaryBill, setSummaryBill] = useState([])
     const [errorModal, setErrorModal] = useState(null)
+    const [billingSameAsShipping,setBillingSameAsShipping] = useState(false)
 
 
 
@@ -280,7 +281,7 @@ const CreateOrder = () => {
         if (currentOrderItems.length === 0) {
             errors.productSelect = 'At least one product must be added to the order';
         }
-    
+
         if (Object.keys(errors).length > 0) {
             setErrors(errors);
             setErrorModal({
@@ -289,15 +290,15 @@ const CreateOrder = () => {
             });
             return;
         }
-    
+
         //Send order to backend here
-        
+
         setErrorModal({
             title: 'Order Submitted',
             message: 'Your order has been successfully submitted!',
         });
     };
-    
+
 
     return (
         <>
@@ -407,10 +408,17 @@ const CreateOrder = () => {
                                 id="billingAddress"
                                 rows="2"
                                 placeholder="Enter billing address"
-                                value={form1Data.billingAddress}
+                                value={billingSameAsShipping ? form1Data.shippingAddress : form1Data.billingAddress}
                                 onChange={handleChange1}
                                 name="billingAddress"
+                                readOnly={billingSameAsShipping ? true : false}
                             ></textarea>
+                            <div className='form-check'>
+                                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" onChange={() => setBillingSameAsShipping(!billingSameAsShipping)} />
+                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                                    Same as shipping address
+                                </label>
+                            </div>
                             {errors.billingAddress && <small className="text-danger">{errors.billingAddress}</small>}
                         </div>
                     </div>
