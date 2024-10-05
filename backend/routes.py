@@ -1,3 +1,4 @@
+from crypt import methods
 from backend import app,bcrypt,db
 from backend.models import Product, User
 from flask import render_template, request, jsonify, session
@@ -43,6 +44,12 @@ def logout():
 def getAllProducts():
     allProducts = Product.query.all()
     structured = [[i.product_name,i.product_ref, i.product_price] for i in allProducts]
-    print(structured)
     return jsonify(structured),200
 
+#Create order endpoint
+@app.route('/createorder', methods=['POST'])
+def createOrder():
+    data = request.get_json()
+    print(data)
+    message = "Order created sucessfully!"
+    return jsonify(message),200

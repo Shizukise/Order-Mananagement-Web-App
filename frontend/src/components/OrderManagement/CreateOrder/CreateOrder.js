@@ -367,13 +367,34 @@ const CreateOrder = () => {
 
         async function handleSubmitOrder() {
             setConfirmationModal(null)
-            setErrorModal({
-                title: "Info",
-                message: "Order created sucessfully.",
-            });
-            console.log("order created")
-            return
-        }
+            try {
+                const response = await fetch('/createorder', {
+                    method: 'POST',
+                    headers: { 'Content-Type':'application/json' },
+                    body: JSON.stringify({ form1Data , form2Data, currentOrderItems }), // this is all the data for this page form
+                    credentials: 'include' 
+                });
+                const result = await response.json()
+                if (response.ok) {
+                    setErrorModal({
+                        title: "Info",    
+                        message: `${result}`,
+                    });
+                    /* navigate('/dashboard'); */
+                } else if (response.status === 400) {
+                    /* setPopupMessage("Missing some fields"); */
+                } else if (response.status === 412) {
+                    /* setPopupMessage("Some field is incorrect") */
+                } else if (response.status === 401) {
+                    /* setPopupMessage("Unauthorized access"); */
+                } else if (response.status === 500) {
+                    /* setPopupMessage("Server error"); */
+                } else {
+                    /* setPopupMessage("Oops, something went wrong"); */
+                }
+            } catch (error) {
+                console.error("Network error: ", error);
+            }};
 
         setConfirmationModal({
             title: "Confirm",
