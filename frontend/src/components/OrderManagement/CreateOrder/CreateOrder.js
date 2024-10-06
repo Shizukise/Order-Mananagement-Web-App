@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ManagementNav from "../ManagementNav/Managementnav";
 import { useAuth } from "../../../contexts/AuthContext";
 import "./CreateOrder.css";
+import { useNavigate } from "react-router-dom";
 
 const CreateOrder = () => {
     const { user } = useAuth();
@@ -14,6 +15,8 @@ const CreateOrder = () => {
     const [errorModal, setErrorModal] = useState(null);
     const [confirmationModal, setConfirmationModal] = useState(null)
     const [billingSameAsShipping, setBillingSameAsShipping] = useState(false);
+
+    const navigate = useNavigate()
 
     // Validation error states
     const [errors, setErrors] = useState({
@@ -376,11 +379,11 @@ const CreateOrder = () => {
                 });
                 const result = await response.json()
                 if (response.ok) {
+                    navigate('/dashboard');
                     setErrorModal({
                         title: "Info",    
                         message: `${result}`,
                     });
-                    /* navigate('/dashboard'); */
                 } else if (response.status === 400) {
                     setErrorModal({
                         title: "Error 400",    
