@@ -370,7 +370,7 @@ const CreateOrder = () => {
             try {
                 const response = await fetch('/createorder', {
                     method: 'POST',
-                    headers: { 'Content-Type':'application/json' },
+                    headers: { 'Content-Type':'application/json'},
                     body: JSON.stringify({ form1Data , form2Data, currentOrderItems }), // this is all the data for this page form
                     credentials: 'include' 
                 });
@@ -382,15 +382,30 @@ const CreateOrder = () => {
                     });
                     /* navigate('/dashboard'); */
                 } else if (response.status === 400) {
-                    /* setPopupMessage("Missing some fields"); */
+                    setErrorModal({
+                        title: "Error 400",    
+                        message: `Missing nome fields`,
+                    });
                 } else if (response.status === 412) {
-                    /* setPopupMessage("Some field is incorrect") */
+                    setErrorModal({
+                        title: "Error 412",    
+                        message: `Some field is incorrect`,
+                    });
                 } else if (response.status === 401) {
-                    /* setPopupMessage("Unauthorized access"); */
+                    setErrorModal({
+                        title: "Error 401",    
+                        message: `Unauthorized access`,
+                    });
                 } else if (response.status === 500) {
-                    /* setPopupMessage("Server error"); */
+                    setErrorModal({
+                        title: "Error 500",    
+                        message: `Server error`,
+                    });
                 } else {
-                    /* setPopupMessage("Oops, something went wrong"); */
+                    setErrorModal({
+                        title: "Error",    
+                        message: `Oops something went wrong`,
+                    });
                 }
             } catch (error) {
                 console.error("Network error: ", error);
