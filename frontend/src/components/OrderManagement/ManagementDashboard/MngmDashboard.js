@@ -1,9 +1,12 @@
-import ManagementNav from "../ManagementNav/Managementnav";
+import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 
 const ManagementDashboard = () => {
     return (
         <>
             <ManagementNav />
+            <BodyContent>
+                
+            </BodyContent>
         </>
     )
 }

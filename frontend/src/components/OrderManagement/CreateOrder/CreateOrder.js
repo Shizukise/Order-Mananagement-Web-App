@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import ManagementNav from "../ManagementNav/Managementnav";
+import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 import { useAuth } from "../../../contexts/AuthContext";
 import "./CreateOrder.css";
 import { useNavigate } from "react-router-dom";
@@ -107,7 +107,7 @@ const CreateOrder = () => {
                                     className="btn btn-secondary"
                                     data-bs-dismiss="modal"
                                     onClick={onConfirm}>
-                                        Confirm order
+                                    Confirm order
                                 </button>
                                 <button
                                     type="button"
@@ -246,6 +246,7 @@ const CreateOrder = () => {
                 price: 0,
             });
             quantity.current.value = 1;
+            selected.current.value = "Type to search..."
         } else {
             setSelectedProductError((prevDATA) => ({
                 ...prevDATA,
@@ -373,46 +374,47 @@ const CreateOrder = () => {
             try {
                 const response = await fetch('/createorder', {
                     method: 'POST',
-                    headers: { 'Content-Type':'application/json'},
-                    body: JSON.stringify({ form1Data , form2Data, currentOrderItems }), // this is all the data for this page form
-                    credentials: 'include' 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ form1Data, form2Data, currentOrderItems }), // this is all the data for this page form
+                    credentials: 'include'
                 });
                 const result = await response.json()
                 if (response.ok) {
                     navigate('/dashboard');
                     setErrorModal({
-                        title: "Info",    
+                        title: "Info",
                         message: `${result}`,
                     });
                 } else if (response.status === 400) {
                     setErrorModal({
-                        title: "Error 400",    
+                        title: "Error 400",
                         message: `Missing nome fields`,
                     });
                 } else if (response.status === 412) {
                     setErrorModal({
-                        title: "Error 412",    
+                        title: "Error 412",
                         message: `Some field is incorrect`,
                     });
                 } else if (response.status === 401) {
                     setErrorModal({
-                        title: "Error 401",    
+                        title: "Error 401",
                         message: `Unauthorized access`,
                     });
                 } else if (response.status === 500) {
                     setErrorModal({
-                        title: "Error 500",    
+                        title: "Error 500",
                         message: `Server error`,
                     });
                 } else {
                     setErrorModal({
-                        title: "Error",    
+                        title: "Error",
                         message: `Oops something went wrong`,
                     });
                 }
             } catch (error) {
                 console.error("Network error: ", error);
-            }};
+            }
+        };
 
         setConfirmationModal({
             title: "Confirm",
@@ -425,6 +427,7 @@ const CreateOrder = () => {
     return (
         <>
             <ManagementNav />
+            <BodyContent>
             <div className="order-page-container">
                 {/* Creator and Customer Details Section */}
                 <div className="order-section creator-customer-container">
@@ -675,22 +678,25 @@ const CreateOrder = () => {
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-6 mb-3">
-                                <select
+                                <input
+                                    list="productOptions"
                                     className="form-control"
                                     id="productSelect"
                                     name="productSelect"
                                     onChange={handleChange3}
                                     value={form3Data.productSelect}
                                     ref={selected}
-                                >
+                                />
+                                <datalist id="productOptions">
                                     <AllProducts />
-                                </select>
+                                </datalist>
                                 {selectedProductError.error && (
                                     <small className="text-danger">
                                         {selectedProductError.error}
                                     </small>
                                 )}
                             </div>
+
                             <div className="col-md-2 mb-3">
                                 <label htmlFor="quantity" className="form-label">
                                     Quantity
@@ -782,6 +788,7 @@ const CreateOrder = () => {
                     <button className="btn btn-danger mx-2 cancel-btn">Cancel</button>
                 </div>
             </div>
+            </BodyContent>
         </>
     );
 };

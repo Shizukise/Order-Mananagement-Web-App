@@ -7,10 +7,16 @@
     padding: 5px 20px;
     border-bottom: 2px solid #009688;
     position: fixed;
-    top: 60px; /* Positioned below the MainNavbar */
+    top: 60px; /* Positioned below the main navbar (if there is one) */
     width: 100%;
     z-index: 999;
-    height: 50px; /* Define height for consistent spacing */
+    height: 50px; /* Fixed height */
+    box-sizing: border-box;
+}
+
+/* Ensure space is reserved for ManagementNav */
+.body-content {
+    margin-top: 110px; /* 60px for Navbar + 50px for ManagementNav */
 }
 
 /* Individual nav link styles */
@@ -29,14 +35,21 @@
 /* Responsive design */
 @media (max-width: 768px) {
     #ManagementNav {
+        position: static;
         flex-direction: column;
         align-items: flex-start;
         padding: 10px;
+        height: auto; /* Allow auto height for wrapping links */
     }
 
     .mngmntnav {
         width: 100%;
         margin-right: 0;
         margin-bottom: 10px;
+    }
+
+    /* Adjust body content for smaller screens */
+    .body-content {
+        margin-top: 2rem; /* Adjusted based on mobile layout */
     }
 }

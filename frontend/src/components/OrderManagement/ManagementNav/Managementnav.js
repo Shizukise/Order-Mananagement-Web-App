@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import './Managementnav.css'
+import './Managementnav.css';
 import Navbar from "../../Navbar/Navbar";
 
 const ManagementNav = () => {
@@ -17,4 +17,9 @@ const ManagementNav = () => {
     );
 }
 
-export default ManagementNav
+// Wraps content with margin below the fixed navbar
+const BodyContent = ({ children }) => {
+    return <div className="body-content">{children}</div>;
+};
+
+export { ManagementNav, BodyContent };

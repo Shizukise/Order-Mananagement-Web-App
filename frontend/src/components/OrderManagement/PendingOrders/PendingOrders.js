@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
-import ManagementNav from "../ManagementNav/Managementnav";
-import { useAuth } from "../../../contexts/AuthContext";
+import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 import "./PendingOrders.css";
 import { Link } from "react-router-dom";
 
 const OrderTable = () => {
     const [ordersArray, setOrdersArray] = useState([]);
+
+
+    const SearchBar = () => {
+        return (
+            <div className="input-group mb-3">
+                <input type="text" className="form-control" placeholder="Search order number..." aria-label="Recipient's username" aria-describedby="button-addon2" />
+                <button className="btn btn-outline-secondary" type="button" id="button-addon2"><i className="bi bi-search"></i></button>
+            </div>
+
+        )
+    };
 
     useEffect(() => {
         // Fetch orders from the backend
@@ -17,7 +27,7 @@ const OrderTable = () => {
 
                 // Parse the orders string into a JavaScript array of objects
                 const parsedOrders = JSON.parse(ordersString.replace(/'/g, '"'));
-                
+
                 // Set the orders array state
                 setOrdersArray(Array.isArray(parsedOrders) ? parsedOrders : parsedOrders.all);
             } catch (error) {
@@ -49,6 +59,7 @@ const OrderTable = () => {
 
     return (
         <div className="order-table-container">
+        <SearchBar />
             <table className="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -70,7 +81,9 @@ const PendingOrders = () => {
     return (
         <>
             <ManagementNav />
-            <OrderTable />
+            <BodyContent >
+                <OrderTable />
+            </BodyContent>
         </>
     );
 };
