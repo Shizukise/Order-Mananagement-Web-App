@@ -2,6 +2,7 @@ from datetime import datetime
 from sqlalchemy import ForeignKey
 from backend import db, bcrypt, login_manager
 from flask_login import UserMixin
+from sqlalchemy.sql import func
 
 
 @login_manager.user_loader
@@ -52,7 +53,7 @@ class Customer(db.Model):
 class Order(db.Model):
     __tablename__ = 'orders'
     order_id = db.Column(db.Integer(), unique=True, primary_key=True)
-    order_date = db.Column(db.DateTime(), default=datetime.utcnow, nullable=False)
+    order_date = db.Column(db.DateTime(), default=func.now(), nullable=False)
     status = db.Column(db.String(50), nullable=False, default="Pending")  # Status: Pending, Completed, Shipped, etc.
     
     # Foreign Keys
@@ -71,6 +72,14 @@ class Order(db.Model):
 
     # Order Total
     total_amount = db.Column(db.Integer(), nullable=False, default=0)
+
+    def toPending(self):
+        return {
+            'order_id' : self.order_id,
+            'order_date' : self.order_date.strftime("%m/%d %H"),
+            'customer' : self.customer.customer_name,
+            'creator' : self.creator.username
+        }
 
 # OrderItem Model (Many-to-Many Relationship between Order and Product)
 class OrderItem(db.Model):

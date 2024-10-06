@@ -48,8 +48,9 @@ def getAllProducts():
     structured = [[i.product_name,i.product_ref, i.product_price] for i in allProducts]
     return jsonify(structured),200
 
-#Create order endpoint
+#Create order endpoint                                               #Technical debt here - new customer with existing email: No error handling is being done here.
 @app.route('/createorder', methods=['POST'])
+@login_required
 def createOrder():
     data = request.get_json()
     if not all([data.get('form1Data'), data.get('form2Data'), data.get('currentOrderItems')]):
@@ -71,7 +72,7 @@ def createOrder():
             db.session.commit()
     else:
         return jsonify({'message' : ''}), 412
-                                           
+    customer =  Customer.query.filter_by(customer_name = data['form1Data']['customerName']).first()                               
     newOrder = Order(customer_id = customer.customer_id, creator_id = current_user.user_id, payment_method = data['form2Data']['paymentMethod'],
                      payment_terms = data['form2Data']['paymentTerms'], shipping_address = data['form1Data']['shippingAddress'], 
                      delivery_method = data['form2Data']['deliveryMethod'], total_amount = sum([i['price'] for i in data['currentOrderItems']]))
@@ -81,7 +82,15 @@ def createOrder():
         newOrderItem = OrderItem(order_id = newOrder.order_id, product_id = Product.query.filter_by(product_ref = item['productRef']).first().product_id,
                                  quantity = item['quantity'], unit_price = item['productPrice'], total_price = item['price'])
         db.session.add(newOrderItem)
-        print(newOrderItem)
     db.session.commit()
     message = "Order created sucessfully!"
     return jsonify(message),200
+
+
+#Get pending orders endpoint
+@app.route('/getpendingorders',methods=['GET'])
+@login_required
+def getPendingOrders():
+    pendingOrders = Order.query.filter_by(status='Pending').all()
+    print([i.toPending() for i in pendingOrders])
+    return jsonify([i.toPending() for i in pendingOrders]), 200
