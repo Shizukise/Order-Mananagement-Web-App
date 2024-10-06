@@ -1,6 +1,5 @@
-from crypt import methods
 from backend import app,bcrypt,db
-from backend.models import Product, User
+from backend.models import Product, User, Customer, Order, OrderItem
 from flask import render_template, request, jsonify, session
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -49,7 +48,24 @@ def getAllProducts():
 #Create order endpoint
 @app.route('/createorder', methods=['POST'])
 def createOrder():
-    data = request.get_json()
-    print(data)
+    data = request.get_json()            #customer name might be the same, but not the email and phone, need to find a way for that
+    customer = Customer.query.filter_by(customer_name = data['form1Data']['customerName']).first()
+    if not customer:
+        newCustomer = Customer(customer_name = data['form1Data']['customerName'], company_name = data['form1Data']['companyName'],
+                               email = data['form1Data']['customerEmail'], phone = data['form1Data']['customerPhone'],
+                               shipping_address = data['form1Data']['shippingAddress'])
+        db.session.add(newCustomer)
+        db.session.commit()                                         #current_user.user_id
+    newOrder = Order(customer_id = customer.customer_id, creator_id = 1, payment_method = data['form2Data']['paymentMethod'],
+                     payment_terms = data['form2Data']['paymentTerms'], shipping_address = data['form1Data']['shippingAddress'], 
+                     delivery_method = data['form2Data']['deliveryMethod'], total_amount = sum([i['price'] for i in data['currentOrderItems']]))
+    db.session.add(newOrder)
+    db.session.commit()
+    for item in [i for i in data['currentOrderItems']]:
+        newOrderItem = OrderItem(order_id = newOrder.order_id, product_id = Product.query.filter_by(product_ref = item['productRef']).first().product_id,
+                                 quantity = item['quantity'], unit_price = item['productPrice'], total_price = item['price'])
+        db.session.add(newOrderItem)
+        print(newOrderItem)
+    db.session.commit()
     message = "Order created sucessfully!"
     return jsonify(message),200
