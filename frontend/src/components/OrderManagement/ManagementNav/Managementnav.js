@@ -9,7 +9,7 @@ const ManagementNav = () => {
             <Navbar />
             <nav id="ManagementNav"> 
                 <Link className="mngmntnav mngmntnav-active" aria-current="page" to="/management">DashBoard</Link>
-                <Link className="mngmntnav" to="#">Pending Orders</Link>
+                <Link className="mngmntnav" to="/pendingorders">Pending Orders</Link>
                 <Link className="mngmntnav" to="#">Delivery</Link>
                 <Link className="mngmntnav" to="/createorder">Create order</Link>
             </nav>
