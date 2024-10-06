@@ -1,85 +1,78 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ManagementNav from "../ManagementNav/Managementnav";
 import { useAuth } from "../../../contexts/AuthContext";
 import "./PendingOrders.css";
 import { Link } from "react-router-dom";
 
-
 const OrderTable = () => {
-    const [orders,setOrders] = useState([])
-    const [loading,setLoading] = useState(true)
+    const [ordersArray, setOrdersArray] = useState([]);
 
     useEffect(() => {
-        async function fetchOrders() {
+        // Fetch orders from the backend
+        const fetchOrders = async () => {
             try {
                 const response = await fetch('/getpendingorders');
-                const result = await response.json();
-                setOrders(result);
-                setLoading(false);
+                const data = await response.json();
+                const ordersString = data.orders;
+
+                // Parse the orders string into a JavaScript array of objects
+                const parsedOrders = JSON.parse(ordersString.replace(/'/g, '"'));
+                
+                // Set the orders array state
+                setOrdersArray(Array.isArray(parsedOrders) ? parsedOrders : parsedOrders.all);
             } catch (error) {
-                console.error("Error fetching data: ", error);
-                setLoading(false)
-            }             
-        }
-        fetchOrders()
-    },[]);
+                console.error("Error fetching orders:", error);
+            }
+        };
 
-    if (loading) {
-        return ( <div className="spinner-border" role="status">
-            <span className="visually-hidden"></span>
-        </div>)
-    }
-    if (!orders) {
-        return <p>Error fetching data</p>
-    }
-
-    const ordersArray = Array.isArray(orders) ? orders : orders.all; //turn orders into an array
+        fetchOrders();
+    }, []);
 
     const AllOrders = () => {
-        if (ordersArray) {
+        if (ordersArray.length > 0) {
             return ordersArray.map(order => (
-                <tr key={order[0]}>
-                    <th scope="row"><Link to={"#"}>{order['order_id']}</Link></th>
-                    <td scope="row">{order['customer']}</td>
-                    <td scope="row">{order['creator']}</td>
-                    <td scope="row">{order['order_date']}</td>
+                <tr key={order.order_id}>
+                    <th scope="row"><Link to={"#"}>{order.order_id}</Link></th>
+                    <td>{order.customer}</td>
+                    <td>{order.shipping_address}</td>
+                    <td><strong>{order.order_date}</strong> by <strong>{order.creator}</strong></td>
                 </tr>
-            ))
+            ));
+        } else {
+            return (
+                <tr>
+                    <td colSpan="4">No orders available.</td>
+                </tr>
+            );
         }
-    }
+    };
 
     return (
-      <div className="order-table-container">
-        <table className="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Order number</th>
-              <th scope="col">Customer</th>
-              <th scope="col">Created by</th>
-              <th scope="col">Creation date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <AllOrders/>
-          </tbody>
-        </table>
-      </div>
+        <div className="order-table-container">
+            <table className="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Order number</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Shipping Address</th>
+                        <th scope="col">Creation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <AllOrders />
+                </tbody>
+            </table>
+        </div>
     );
-  };
-
-
-
+};
 
 const PendingOrders = () => {
     return (
         <>
-            <ManagementNav/>
+            <ManagementNav />
             <OrderTable />
         </>
-    )
-}
+    );
+};
 
-
-
-
-export default PendingOrders
+export default PendingOrders;

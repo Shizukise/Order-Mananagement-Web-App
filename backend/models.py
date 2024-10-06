@@ -76,9 +76,10 @@ class Order(db.Model):
     def toPending(self):
         return {
             'order_id' : self.order_id,
-            'order_date' : self.order_date.strftime("%m/%d %H"),
+            'order_date' : self.order_date.strftime("%m/%d %H:%M"),
             'customer' : self.customer.customer_name,
-            'creator' : self.creator.username
+            'creator' : self.creator.username,
+            'shipping_address' : self.shipping_address
         }
 
 # OrderItem Model (Many-to-Many Relationship between Order and Product)

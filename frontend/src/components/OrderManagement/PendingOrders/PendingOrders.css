@@ -1,53 +1,64 @@
-
-
-/* OrderTable container for consistent layout */
+/* Container for the entire table */
 .order-table-container {
     width: 100%;
-    margin: 7rem auto 0; /* Add a top margin of 7rem */
+    margin: 7rem auto 0; /* Maintain the top margin */
     padding: 20px;
-    background-color: #f8f9fa; /* Light background similar to your page style */
+    background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.164);
-    height: calc(100vh - 7rem); /* Set height considering the top margin */
+    height: calc(100vh - 7rem); /* Ensures it fills the remaining vertical space */
     max-height: calc(100vh - 7rem);
-    overflow-y:auto; /* Allow scrolling if content overflows */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Bootstrap hover effect already provides row highlight on hover */
-.table-hover tbody tr:hover {
-    background-color: #f0f0f0;
+/* Ensure the table header is sticky */
+.table thead th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #001c38;
+    position: sticky;
+    top: 0;
+    z-index: 2;
 }
 
-.table {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.164);
+/* Scrollable tbody */
+.table tbody {
+    display: block;
+    max-height: calc(100vh - 12rem); /* Adjusted height for table body (subtracting extra margin for padding) */
+    overflow-y: auto; /* Enable vertical scrolling */
+    width: 100%;
 }
 
-/* Custom table styling to match the design */
+/* Ensure the columns maintain width consistency between thead and tbody */
+.table thead, .table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* Style table rows */
 .table th,
 .table td {
     padding: 12px 15px;
     text-align: left;
     font-size: 16px;
     color: #333;
+    border: 1px solid #dee2e6;
 }
 
-.table thead th {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
+/* Bootstrap hover effect already adds highlight on hover */
+.table-hover tbody tr:hover {
+    background-color: #0a446b5e;
 }
 
-.table tbody td {
-    border-top: 1px solid #dee2e6;
-}
-
-/* Responsive table handling for smaller screens */
+/* Responsive handling */
 @media (max-width: 768px) {
     .order-table-container {
         padding: 10px;
     }
-    .table th,
-    .table td {
+    .table th, .table td {
         font-size: 14px;
     }
     .table {
@@ -55,5 +66,8 @@
         display: block;
         overflow-x: auto;
         white-space: nowrap;
+    }
+    .table tbody {
+        max-height: 300px; /* Adjust based on mobile screen space */
     }
 }
