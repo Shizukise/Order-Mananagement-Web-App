@@ -3,6 +3,10 @@ import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 import "./PendingOrders.css";
 import { Link } from "react-router-dom";
 
+
+
+//Technical debt - When searching an order, searchstate will hold so even if we click in Pending orders link, it does not refresh the page.
+
 const OrderTable = () => {
     const [ordersArray, setOrdersArray] = useState([]);
     const [searchState, setSearchState] = useState([]);
@@ -66,7 +70,7 @@ const OrderTable = () => {
         if (ordersArray.length > 0) {
             return ordersArray.map(order => (
                 <tr key={order.order_id}>
-                    <th scope="row"><Link to={"#"}>{order.order_id}</Link></th>
+                    <th scope="row"><Link to={`/order/${order.order_id}`}>{order.order_id}</Link></th>
                     <td>{order.customer}</td>
                     <td>{order.shipping_address}</td>
                     <td><strong>{order.order_date}</strong> by <strong>{order.creator}</strong></td>

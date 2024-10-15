@@ -82,6 +82,20 @@ class Order(db.Model):
             'shipping_address' : self.shipping_address
         }
 
+    def toAllData(self):
+        return {
+            'order_id' : self.order_id,
+            'order_date' : self.order_date.strftime("%m/%d %H:%M"),
+            'customer' : self.customer.customer_name,
+            'creator' : self.creator.username,
+            'shipping_address' : self.shipping_address,
+            'total_amount' : self.total_amount,
+            'payment_method' : self.payment_method,
+            'payment_terms' : self.payment_terms,
+            'delivery_method' : self.delivery_method,
+            'status' : self.status
+        }
+
 # OrderItem Model (Many-to-Many Relationship between Order and Product)
 class OrderItem(db.Model):
     __tablename__ = 'order_items'

@@ -1,3 +1,4 @@
+from operator import methodcaller
 from backend import app,bcrypt,db
 from backend.models import Product, User, Customer, Order, OrderItem
 from flask import render_template, request, jsonify, session
@@ -109,8 +110,18 @@ def getSearchedOrder(ordernumber):
     except Exception as e:
         return jsonify({"message":"An internal error occurred"}), 500
 
-
-
+#Get all data from order
+@app.route('/getorder<int:orderid>data',methods=['GET'])
+@login_required
+def getAllOrderData(orderid):
+    print("getting complete data")
+    try:
+        order = Order.query.filter_by(order_id = orderid).first()
+        if order is None:
+            return jsonify({"message":"Order does not exist or not found"}), 500
+        return jsonify({"order": order.toAllData()}), 200
+    except Exception as e:
+        return jsonify({"message": "An internal error occurred"}),500
 
 
 #for developing made by chatgpt , only creates 20 mock rows

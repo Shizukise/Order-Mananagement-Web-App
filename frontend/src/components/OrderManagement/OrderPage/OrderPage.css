@@ -1,0 +1,234 @@
+/* General container styling for the order form */
+.order-page-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Full width */
+    padding: 20px; /* Padding for the container */
+    background-color: #f9f9f9; /* Soft light background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+    margin: 20px 0; /* Vertical margin */
+}
+
+/* Order Section Styling */
+.order-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between items */
+}
+
+/* Title Styles */
+.section-title {
+    grid-column: 1 / -1; /* Full width title */
+    font-size: 1.8rem; /* Slightly larger title size */
+    font-weight: 600; /* Semi-bold */
+    color: #333; /* Dark grey for contrast */
+    border-bottom: 2px solid #009688; /* Teal underline */
+    margin-bottom: 15px; /* Space below title */
+}
+
+/* Form Group Styles */
+.form-group {
+    display: flex;
+    flex-direction: column; /* Stack label and input */
+    margin-bottom: 15px; /* Space between groups */
+}
+
+/* Label Styles */
+.form-group label {
+    font-weight: 500; /* Medium weight for labels */
+    color: #555; /* Darker grey for readability */
+    margin-bottom: 5px; /* Space below labels */
+}
+
+/* Input Styles */
+.form-control {
+    padding: 12px; /* More padding for inputs */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1rem; /* Base font size */
+    transition: border-color 0.3s; /* Smooth transition for focus */
+}
+
+.form-control:focus {
+    border-color: #009688; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Button Styles */
+.btn {
+    padding: 12px 20px; /* Padding for buttons */
+    margin: 10px 0; /* Space around buttons */
+    border-radius: 5px; /* Rounded corners */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor */
+    font-size: 1rem; /* Base font size */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+/* Specific Button Colors */
+.save-draft-btn {
+    background-color: #009688; /* Teal color */
+    color: white; /* White text */
+}
+
+.save-draft-btn:hover {
+    background-color: #00796b; /* Darker teal on hover */
+    transform: scale(1.05); /* Slight scale effect on hover */
+}
+
+.submit-order-btn {
+    background-color: #003366; /* Navy color */
+    color: white; /* White text */
+}
+
+.submit-order-btn:hover {
+    background-color: #002244; /* Darker navy on hover */
+    transform: scale(1.05); /* Slight scale effect on hover */
+}
+
+.cancel-btn {
+    background-color: #f44336; /* Red color */
+    color: white; /* White text */
+}
+
+.cancel-btn:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+    transform: scale(1.05); /* Slight scale effect on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .order-section {
+        grid-template-columns: 1fr; /* Stack sections vertically on small screens */
+    }
+
+    /* Adjust button widths */
+    .btn {
+        width: 100%; /* Full width buttons on small screens */
+    }
+}
+
+/* Order Summary Styling */
+.order-summary-card {
+    max-width: 800px; /* Maximum width for larger screens */
+    width: 100%; /* Full width on smaller screens */
+    margin: 20px auto; /* Center the card */
+    background-color: #ffffff; /* White background */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding inside the summary */
+    border: 1px solid #ddd; /* Light border */
+}
+
+/* Order Summary Item Styles */
+.order-summary-item {
+    padding: 10px 0; /* Space between summary items */
+    border-bottom: 1px solid #eee; /* Light border for separation */
+}
+
+/* Emphasize Total */
+.order-summary-total {
+    font-weight: bold;
+    font-size: 1.2rem; /* Larger total */
+    margin-top: 15px; /* Space above */
+    color: #333; /* Dark grey for emphasis */
+}
+
+/* Delete Button Styling */
+.DeleteArticleBtn {
+    background-color: transparent; /* Transparent background */
+    border: none; /* No border */
+    color: #dc3545; /* Bootstrap Danger (red) color */
+    font-size: 1.2rem; /* Slightly larger font for visibility */
+    cursor: pointer; /* Pointer cursor to indicate clickability */
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+}
+
+/* Hover Effect */
+.DeleteArticleBtn:hover {
+    transform: scale(1.15); /* Scale up on hover */
+    color: #bd2130; /* Darker red for the icon on hover */
+}
+
+/* Icon Styling */
+.DeleteArticleBtn i {
+    display: inline-block;
+    vertical-align: middle; /* Vertically center the icon */
+}
+
+
+/* Creator and Customer Details Section */
+.creator-customer-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.creator-customer-details {
+    flex: 1; /* Allow divs to grow equally */
+    min-width: 300px; /* Minimum width for smaller screens */
+    max-width: 48%; /* Use 48% to allow space between sections */
+    background-color: #ffffff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Adjust input fields within creator-customer-details */
+.creator-customer-details input {
+    width: calc(100% - 20px); /* Full width minus padding */
+    margin-top: 5px; /* Space above input fields */
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+    .creator-customer-container {
+        flex-direction: column; /* Stack on smaller screens */
+    }
+
+    .creator-customer-details {
+        max-width: 100%; /* Full width on mobile */
+        margin-bottom: 20px; /* Space below each detail section */
+    }
+}
+
+/* Order Items List Container */
+.order-items-list {
+    display: grid; /* Use grid for layout */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive column sizing */
+    gap: 100px; /* Increase space between columns */
+    margin-bottom: 30px; /* Space below the list */
+    padding: 15px; /* Padding around the grid */
+    background-color: #ffffff; /* White background for contrast */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ddd; /* Border for definition */
+}
+
+/* Individual Order Item */
+.order-item {
+    padding: 15px; /* Padding inside each order item */
+    border: 1px solid #ccc; /* Border around each item */
+    border-radius: 4px; /* Slightly rounded corners */
+    background-color: #f9f9f9; /* Light grey background */
+    transition: box-shadow 0.3s; /* Smooth transition for hover effects */
+}
+
+/* Hover Effect for Order Items */
+.order-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Shadow effect on hover */
+}
+
+/* Responsive Adjustments */
+@media (min-width: 768px) {
+    .order-items-list {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns on larger screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .order-items-list {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+    }
+}
