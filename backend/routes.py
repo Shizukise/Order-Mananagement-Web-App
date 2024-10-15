@@ -49,6 +49,7 @@ def getAllProducts():
     return jsonify(structured),200
 
 #Create order endpoint                                               #Technical debt here - new customer with existing email: No error handling is being done here.
+                                                                                        #When searching for a product, unexistant products can be inputed.
 @app.route('/createorder', methods=['POST'])
 @login_required
 def createOrder():
@@ -95,7 +96,18 @@ def getPendingOrders():
     return jsonify({"orders" : f"{[i.toPending() for i in pendingOrders]}"}), 200
 
 
-
+#Get searched order
+@app.route('/getorder<int:ordernumber>', methods=['GET'])
+@login_required
+def getSearchedOrder(ordernumber):
+    try:
+        order = Order.query.filter_by(order_id = ordernumber).first()
+        if order is None:
+            return jsonify({"message":"Order does not exist or not found"}), 500
+        print(order)
+        return jsonify({"order": order.toPending()}), 200
+    except Exception as e:
+        return jsonify({"message":"An internal error occurred"}), 500
 
 
 

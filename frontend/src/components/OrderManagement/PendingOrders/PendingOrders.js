@@ -1,42 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 import "./PendingOrders.css";
 import { Link } from "react-router-dom";
 
 const OrderTable = () => {
     const [ordersArray, setOrdersArray] = useState([]);
+    const [searchState, setSearchState] = useState([]);
 
+    const searchRef = useRef()
+
+    const handleSearch = () => {
+        if( searchRef.current.value === "") {
+            setSearchState([])
+        } else {
+        setSearchState([searchRef.current.value])
+        }
+    }
 
     const SearchBar = () => {
         return (
             <div className="input-group mb-3">
-                <input type="text" className="form-control" placeholder="Search order number..." aria-label="Recipient's username" aria-describedby="button-addon2" />
-                <button className="btn btn-outline-secondary" type="button" id="button-addon2"><i className="bi bi-search"></i></button>
+                <input type="text" className="form-control" placeholder="Search order number..."
+                    aria-label="Recipient's username" aria-describedby="button-addon2" onSubmit={() => handleSearch()} ref={searchRef} onKeyDown={(e) => {
+                                                                                                                                                if (e.key === 'Enter') {
+                                                                                                                                                    handleSearch()
+                                                                                                                                                }}} />
+                <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={() => handleSearch()}><i className="bi bi-search"></i></button>
             </div>
 
         )
     };
 
     useEffect(() => {
-        // Fetch orders from the backend
         const fetchOrders = async () => {
-            try {
-                const response = await fetch('/getpendingorders');
-                const data = await response.json();
-                const ordersString = data.orders;
+            if (searchState.length < 1) {
+                try {
+                    const response = await fetch('/getpendingorders');
+                    const data = await response.json();
+                    const ordersString = data.orders;
 
-                // Parse the orders string into a JavaScript array of objects
-                const parsedOrders = JSON.parse(ordersString.replace(/'/g, '"'));
+                    // Parse the orders string into a JavaScript array of objects
+                    const parsedOrders = JSON.parse(ordersString.replace(/'/g, '"'));
 
-                // Set the orders array state
-                setOrdersArray(Array.isArray(parsedOrders) ? parsedOrders : parsedOrders.all);
-            } catch (error) {
-                console.error("Error fetching orders:", error);
+                    // Set the orders array state
+                    setOrdersArray(Array.isArray(parsedOrders) ? parsedOrders : parsedOrders.all);
+                } catch (error) {
+                    console.error("Error fetching orders:", error);
+                }
+            } else {
+                try {
+                    const response = await fetch(`/getorder${searchState}`);
+                    const data = await response.json();
+                    console.log(data)
+                    setOrdersArray([data.order])
+                } catch (error) {
+                    console.error("error fetching order:", error)
+                }
             }
-        };
+        }
 
         fetchOrders();
-    }, []);
+    }, [searchState]);
 
     const AllOrders = () => {
         if (ordersArray.length > 0) {
@@ -59,7 +83,7 @@ const OrderTable = () => {
 
     return (
         <div className="order-table-container">
-        <SearchBar />
+            <SearchBar />
             <table className="table table-striped table-hover">
                 <thead>
                     <tr>
