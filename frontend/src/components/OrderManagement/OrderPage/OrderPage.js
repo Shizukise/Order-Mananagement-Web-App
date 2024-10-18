@@ -2,24 +2,30 @@ import { useEffect, useState } from "react";
 import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 import "./OrderPage.css"; // Ensure your CSS is properly linked
 import { useParams } from "react-router-dom";
+import UrgentImg from "../../UrgentImg";
+import { Link } from "react-router-dom";
 
 const Order = () => {
     const { orderId } = useParams();
     const [orderData, setOrderData] = useState(null)
-    const [isUrgent, setIsUrgent] = useState(true)    // only for development. This needs to be passed from backend, and defined when creating order
+    const [isUrgent, setIsUrgent] = useState(false)
     const [stateColor, setStateColor] = useState("black")
 
 
-
-
-    const UrgentImg = () => {
+    const OrderNav = () => {
         return (
-            <div className="form-group mb-3">
-                <span><img alt="UrgentIcon" src={require("../../../assets/images/alarm.png")} className="UrgentIcon" /> Urgent</span>
+            <div className="container-fluid">
+                <nav className="nav orderNav">
+                    <Link></Link>
+                    <p className="nav-link active" aria-current="page"><Link className="active">Order</Link></p>
+                    <p className="nav-link orderNavLink"><Link className="orderNavLink" to={`/orderchat/${orderId}`}>Chat</Link></p>
+                    <p className="nav-link orderNavLink"><Link className="orderNavLink">Files</Link></p>
+                    <p className="nav-link orderNavLink"><Link className="orderNavLink">Historic</Link></p>
+                </nav>
             </div>
-
         )
     }
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -29,6 +35,9 @@ const Order = () => {
                 setOrderData(data)
                 if (data.order.status === "Pending") {
                     setStateColor("#FFC107")
+                }
+                if (data.order.urgent === "true") {
+                    setIsUrgent(true)
                 }
             } catch (error) {
                 console.error(error)
@@ -40,36 +49,37 @@ const Order = () => {
 
     const AllItems = () => {
         if (orderData) {
-        return orderData.products.map(product => (
-            <div className="row">
-            <div className="col-3">
-                <p>{product.product_name}</p>
-            </div>
-            <div className="col-2">
-                <p>{product.product_price}</p>
-            </div>
-            <div className="col-2">
-                <p>{product.quantity}</p>
-            </div>
-            <div className="col-2">
-                <p>{product.total_price}</p>
-            </div>
-            <div className="col-2">
-                <input className="IndItemQtToDeliver" type="number" min={0} max={product.quantity} />
-            </div>
-        </div>
-        ))
-    } else {
-        return (
-            <p>Error Loading items</p>
-        )
-    }
-        
+            return orderData.products.map(product => (
+                <div className="row" key={product.product_name}>
+                    <div className="col-3">
+                        <p>{product.product_name}</p>
+                    </div>
+                    <div className="col-2">
+                        <p>{product.product_price}</p>
+                    </div>
+                    <div className="col-2">
+                        <p>{product.quantity}</p>
+                    </div>
+                    <div className="col-2">
+                        <p>{product.total_price}</p>
+                    </div>
+                    <div className="col-2">
+                        <input className="IndItemQtToDeliver" type="number" min={0} max={product.quantity} placeholder={product.quantity} />
+                    </div>
+                </div>
+            ))
+        } else {
+            return (
+                <p>Error Loading items</p>
+            )
+        }
+
     }
 
     return (
         <div className="order-page-container">
             {/* Order Data Section */}
+            <OrderNav />
             <div className="order-section creator-customer-container">
                 {/* Creator Details */}
                 <div className="creator-customer-details">
@@ -88,7 +98,7 @@ const Order = () => {
                     </div>
                     <div className="form-group mb-3">
                         <label className="form-label">Remarks</label>
-                        <p className="form-control-plaintext">blablabla...</p>{/*need to fetch this also */}
+                        <p className="form-control-plaintext remarks">blablabla...</p>{/*need to fetch this also */}
                     </div>
                 </div>
 
@@ -139,6 +149,9 @@ const Order = () => {
                     <div className="OrderItemsList">
                         <AllItems />
                     </div>
+                    <div className="container-fluid TotalPrice">
+                        <p>Total price = {orderData ? orderData.order.total_amount : "loading.."}</p>
+                    </div>
                 </div>
             </div>
 
@@ -156,11 +169,13 @@ const OrderPage = () => {
         <>
             <ManagementNav />
             <BodyContent>
-                <span className="margintop"><br></br></span>
+                <span></span>
                 <Order />
             </BodyContent>
         </>
     );
 };
+
+
 
 export default OrderPage;

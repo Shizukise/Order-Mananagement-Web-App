@@ -4,7 +4,6 @@ import "./PendingOrders.css";
 import { Link } from "react-router-dom";
 
 
-
 //Technical debt - When searching an order, searchstate will hold so even if we click in Pending orders link, it does not refresh the page.
 
 const OrderTable = () => {
@@ -25,13 +24,16 @@ const OrderTable = () => {
         return (
             <div className="input-group mb-3">
                 <input type="text" className="form-control" placeholder="Search order number..."
-                    aria-label="Recipient's username" aria-describedby="button-addon2" onSubmit={() => handleSearch()} ref={searchRef} onKeyDown={(e) => {
-                                                                                                                                                if (e.key === 'Enter') {
-                                                                                                                                                    handleSearch()
-                                                                                                                                                }}} />
-                <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={() => handleSearch()}><i className="bi bi-search"></i></button>
+                    aria-label="Recipient's username" aria-describedby="button-addon2" 
+                    onSubmit={() => handleSearch()} ref={searchRef} onKeyDown={(e) => {
+                                                                                        if (e.key === 'Enter') {
+                                                                                                                handleSearch()
+                                                                                                                }}} />
+                <button className="btn btn-outline-secondary" type="button" id="button-addon2" 
+                onClick={() => handleSearch()}>
+                    <i className="bi bi-search"></i>
+                </button>
             </div>
-
         )
     };
 
@@ -70,7 +72,11 @@ const OrderTable = () => {
         if (ordersArray.length > 0) {
             return ordersArray.map(order => (
                 <tr key={order.order_id}>
-                    <th scope="row"><Link to={`/order/${order.order_id}`}>{order.order_id}</Link></th>
+                    <th scope="row">
+                        <Link to={`/order/${order.order_id}`}>
+                        {order.order_id} 
+                        </Link>
+                    </th>
                     <td>{order.customer}</td>
                     <td>{order.shipping_address}</td>
                     <td><strong>{order.order_date}</strong> by <strong>{order.creator}</strong></td>

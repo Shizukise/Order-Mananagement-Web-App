@@ -9,6 +9,7 @@ import PendingOrders from './components/OrderManagement/PendingOrders/PendingOrd
 import ProtectedRoute from './components/ProtectedRoute';
 import CreateOrder from './components/OrderManagement/CreateOrder/CreateOrder';
 import OrderPage from './components/OrderManagement/OrderPage/OrderPage';
+import ChatPage from './components/OrderManagement/OrderPage/ChatPage';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           <Route path='/createorder' element={<ProtectedRoute><CreateOrder /></ProtectedRoute>}/>
           <Route path='/pendingorders' element={<ProtectedRoute><PendingOrders /></ProtectedRoute>}/>
           <Route path='/order/:orderId' element={<ProtectedRoute><OrderPage/></ProtectedRoute>}/>
+          <Route path='/orderchat/:orderId' element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
         </Routes>
       </AuthProvider>
     </Router>

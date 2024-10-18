@@ -323,3 +323,15 @@ textarea {
     display: inline-block;
     vertical-align: middle; /* Vertically center the icon */
 }
+
+
+.Urgent {
+    font-size: larger;
+    font-weight: bold;
+    display: flexbox;
+
+}
+
+.Urgent input {
+    transform: scale(1.3);
+}

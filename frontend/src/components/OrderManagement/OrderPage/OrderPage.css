@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+
+
 /* General container styling for the order form */
 .order-page-container {
     display: flex;
@@ -239,4 +243,48 @@
     padding: 0 !important;
     line-height: 2rem !important;
     height: 2rem !important;
+}
+
+.TotalPrice {
+    display: flex;
+    justify-content: flex-end; /* Aligns the total price to the right */
+    align-items: center; /* Vertically centers the text */
+    font-family: 'Poppins', sans-serif; /* Prettier, modern font */
+    line-height: 1.5rem;
+    font-weight: 450; /* Medium bold font */
+    font-size: 1.7rem; /* Slightly larger size */
+    margin-top: 20px; /* Space above the total price */
+    width: 100%; /* Ensures it spans the entire width */
+    background-color: #f2f2f2; /* Dim background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+}
+
+
+.remarks {
+    background-color: rgba(184, 171, 0, 0.548);
+}
+
+
+.active {
+    color: #0004f3;
+    font-weight: 500 !important;
+    transform: scale(1.1);
+}
+
+.orderNav {
+    margin-bottom: 2rem;
+    font-size: larger;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 100%;
+    background-color: rgba(1, 70, 148, 0.452);
+}
+
+.orderNavLink {
+    color: black;
+}
+
+
+.chat-page-container {
+    padding: 20px;
 }
