@@ -79,7 +79,7 @@
 /* Container for the search bar */
 .input-group {
     max-width: 400px;
-    margin-left: auto;
+    margin-left: 2rem;
     margin-right: auto;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -126,11 +126,104 @@
 @media (max-width: 768px) {
     .input-group {
         max-width: 100%;
+        margin-left: 0 !important;
     }
     .order-table-container {
         max-height: 100vh; /* Maximum height set to full viewport height */
         height: calc(100vh - 60px); /* Adjust height considering the 60px for the Navbar or any other content */
         overflow-y: auto; /* Enable vertical scrolling within the container */
         width: 100vw;
+    }
+}
+
+/* Ensure input and button are the same height */
+.input-group .form-control,
+.input-group .btn {
+    height: 100%;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+/* Match the button's height to the input */
+.input-group .btn {
+    display: inline-block;
+    padding: 0 15px;
+    height: auto; /* Let the button adapt to the input height */
+    min-height: 100%; /* Ensure the button is at least as tall as the input */
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Optional: Remove any additional padding or box model inconsistencies */
+.input-group .form-control,
+.input-group .btn {
+    margin: 0; /* Remove margins, if any */
+    border-width: 1px; /* Ensure border width is the same */
+}
+
+/* Ensure the button doesn't cause wrapping or overlap */
+.input-group {
+    display: flex;
+    align-items: stretch; /* Align all items to stretch equally */
+}
+
+
+/* Responsive handling for small screens */
+@media (max-width: 768px) {
+    .order-table-container {
+        padding: 10px;
+        overflow-x: auto; /* Allow horizontal scrolling if needed */
+        max-height: 100%;
+        height: 100%;
+    }
+
+    /* The table should scroll horizontally on small screens */
+    .table {
+        display: block;
+        width: 100%;
+        overflow-x: auto; /* Enable horizontal scrolling */
+        white-space: nowrap; /* Prevent content from wrapping */
+    }
+
+    .table td, .table th {
+        font-size: 14px;
+        min-width: 120px; /* Ensure table cells don't get too small */
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+
+    /* Adjust the table body scroll area */
+    .table tbody {
+        max-height: 300px; /* Keep the table body smaller on mobile */
+    }
+
+    /* Remove ellipsis on smaller screens to prevent content loss */
+    .table td, .table th {
+        white-space: normal; /* Allow content to wrap on small screens */
+        text-overflow: clip; /* Disable ellipsis on small screens */
+    }
+}
+
+/* Adjust input and button sizing for smaller screens */
+@media (max-width: 768px) {
+    .input-group {
+        max-width: 100%;
+        flex-direction: row; /* Make sure input and button are inline */
+    }
+
+    .input-group .form-control,
+    .input-group .btn {
+        font-size: 14px; /* Reduce font size for smaller screens */
+        padding: 8px; /* Reduce padding for better fit */
+    }
+
+    .input-group .form-control {
+        border-radius: 6px 0 0 6px; /* Adjust rounded corners for smaller screens */
+    }
+
+    .input-group .btn {
+        border-radius: 0 6px 6px 0; /* Adjust rounded corners for smaller screens */
     }
 }
