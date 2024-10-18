@@ -608,7 +608,7 @@ const CreateOrder = () => {
                                 Payment Method
                             </label>
                             <select
-                                className="form-control"
+                                className="form-control deliveryMethodSelect"
                                 id="paymentMethod"
                                 onChange={handleChange2}
                                 name="paymentMethod"
@@ -624,7 +624,7 @@ const CreateOrder = () => {
                             </label>
                             <input
                                 type="text"
-                                className="form-control"
+                                className="form-control "
                                 id="paymentTerms"
                                 placeholder="e.g., Net 30 days"
                                 value={form2Data.paymentTerms}
@@ -657,7 +657,7 @@ const CreateOrder = () => {
                                 Delivery Method
                             </label>
                             <select
-                                className="form-control"
+                                className="form-control deliveryMethodSelect"
                                 id="deliveryMethod"
                                 name="deliveryMethod"
                                 onChange={handleChange2}

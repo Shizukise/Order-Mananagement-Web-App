@@ -233,3 +233,10 @@
     line-height: 2rem;
     padding-left: 10px;
 }
+
+
+.deliveryMethodSelect {
+    padding: 0 !important;
+    line-height: 2rem !important;
+    height: 2rem !important;
+}

@@ -160,8 +160,10 @@
 
 /* Payment and Additional Info */
 .payment-additional-info {
+    display:block !important;
+    width: 100% !important;
     display: flex;
-    justify-content: space-between;
+    justify-content: center !important;
 }
 
 #paymentMethod {
@@ -170,7 +172,7 @@
 
 .payment-info,
 .additional-info {
-    width: 48%;
+    width: 100%;
     background-color: #ffffff;
     padding: 15px;
     border: 1px solid #ddd;
