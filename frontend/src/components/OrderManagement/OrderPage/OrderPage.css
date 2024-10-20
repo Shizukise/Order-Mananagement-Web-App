@@ -20,6 +20,7 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
     gap: 20px; /* Space between items */
     max-width: 2000px;
+    margin-top: 2rem !important;
 }
 
 /* Title Styles */
@@ -169,6 +170,7 @@
     justify-content: space-between;
     margin-bottom: 30px;
     flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    margin-top: 2rem !important;
 }
 
 .creator-customer-details {
