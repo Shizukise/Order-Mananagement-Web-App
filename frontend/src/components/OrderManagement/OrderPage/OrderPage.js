@@ -7,50 +7,54 @@ import { Link } from "react-router-dom";
 
 const Order = () => {
     const { orderId } = useParams();
-    const [orderData, setOrderData] = useState(null)
-    const [isUrgent, setIsUrgent] = useState(false)
-    const [stateColor, setStateColor] = useState("black")
-
+    const [orderData, setOrderData] = useState(null);
+    const [isUrgent, setIsUrgent] = useState(false);
+    const [stateColor, setStateColor] = useState("black");
 
     const OrderNav = () => {
         return (
             <div className="container-fluid">
                 <nav className="nav orderNav">
-                    <Link></Link>
-                    <p className="nav-link active" aria-current="page"><Link className="active">Order</Link></p>
-                    <p className="nav-link orderNavLink"><Link className="orderNavLink" to={`/orderchat/${orderId}`}>Chat</Link></p>
-                    <p className="nav-link orderNavLink"><Link className="orderNavLink">Files</Link></p>
-                    <p className="nav-link orderNavLink"><Link className="orderNavLink">Historic</Link></p>
+                    <Link className="nav-link orderNavLink active" to={`/order/${orderId}`}>
+                        Order
+                    </Link>
+                    <Link className="nav-link orderNavLink" to={`/orderchat/${orderId}`}>
+                        Chat
+                    </Link>
+                    <Link className="nav-link orderNavLink" to="#">
+                        Files
+                    </Link>
+                    <Link className="nav-link orderNavLink" to="#">
+                        History
+                    </Link>
                 </nav>
             </div>
-        )
-    }
-
+        );
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`/getorder${orderId}data`)
-                const data = await response.json()
-                setOrderData(data)
+                const response = await fetch(`/getorder${orderId}data`);
+                const data = await response.json();
+                setOrderData(data);
                 if (data.order.status === "Pending") {
-                    setStateColor("#FFC107")
+                    setStateColor("#FFC107");
                 }
                 if (data.order.urgent === "true") {
-                    setIsUrgent(true)
+                    setIsUrgent(true);
                 }
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
-        }
-        fetchData()
-    }, [])
-
+        };
+        fetchData();
+    }, [orderId]);
 
     const AllItems = () => {
         if (orderData) {
-            return orderData.products.map(product => (
-                <div className="row" key={product.product_name}>
+            return orderData.products.map((product) => (
+                <div className="row order-item-row" key={product.product_name}>
                     <div className="col-3">
                         <p>{product.product_name}</p>
                     </div>
@@ -64,21 +68,23 @@ const Order = () => {
                         <p>{product.total_price}</p>
                     </div>
                     <div className="col-2">
-                        <input className="IndItemQtToDeliver" type="number" min={0} max={product.quantity} placeholder={product.quantity} />
+                        <input
+                            className="IndItemQtToDeliver"
+                            type="number"
+                            min={0}
+                            max={product.quantity}
+                            placeholder={product.quantity}
+                        />
                     </div>
                 </div>
-            ))
+            ));
         } else {
-            return (
-                <p>Error Loading items</p>
-            )
+            return <p>Error loading items</p>;
         }
-
-    }
+    };
 
     return (
         <div className="order-page-container">
-            {/* Order Data Section */}
             <OrderNav />
             <div className="order-section creator-customer-container">
                 {/* Creator Details */}
@@ -86,19 +92,27 @@ const Order = () => {
                     <div className="section-title">Order {orderId} Details</div>
                     <div className="form-group mb-3">
                         <label className="form-label">Order Creator</label>
-                        <p className="form-control-plaintext">{orderData ? orderData.order.creator : "loading.."}</p>
+                        <p className="form-control-plaintext">
+                            {orderData ? orderData.order.creator : "loading..."}
+                        </p>
                     </div>
                     <div className="form-group mb-3">
                         <label className="form-label">Creator Contact</label>
-                        <p className="form-control-plaintext">{orderData ? orderData.order.creator_contact : "loading.."}</p> {/*need to fetch this also */}
+                        <p className="form-control-plaintext">
+                            {orderData ? orderData.order.creator_contact : "loading..."}
+                        </p>
                     </div>
                     <div className="form-group mb-3">
                         <label className="form-label">Creator Email</label>
-                        <p className="form-control-plaintext">john.doe@example.com</p>{/*need to fetch this also */}
+                        <p className="form-control-plaintext">
+                            {orderData ? orderData.order.creator_email : "loading..."}
+                        </p>
                     </div>
                     <div className="form-group mb-3">
                         <label className="form-label">Remarks</label>
-                        <p className="form-control-plaintext remarks">blablabla...</p>{/*need to fetch this also */}
+                        <p className="form-control-plaintext remarks">
+                            {orderData ? orderData.order.remarks : "loading..."}
+                        </p>
                     </div>
                 </div>
 
@@ -107,20 +121,28 @@ const Order = () => {
                     <div className="section-title">Customer & Delivery Details</div>
                     <div className="form-group mb-3">
                         <label className="form-label">Customer Contact</label>
-                        <p className="form-control-plaintext">+987654321</p>
+                        <p className="form-control-plaintext">
+                            {orderData ? orderData.order.customer_contact : "loading..."}
+                        </p>
                     </div>
                     <div className="form-group mb-3">
                         <label className="form-label">Customer Email</label>
-                        <p className="form-control-plaintext">{orderData ? orderData.order.customer_email : "loading.."}</p>
+                        <p className="form-control-plaintext">
+                            {orderData ? orderData.order.customer_email : "loading..."}
+                        </p>
                     </div>
                     <div className="form-group mb-3">
                         <label className="form-label">Delivery Address</label>
-                        <p className="form-control-plaintext">{orderData ? orderData.order.shipping_address : "Loading .."}</p>
+                        <p className="form-control-plaintext">
+                            {orderData ? orderData.order.shipping_address : "loading..."}
+                        </p>
                     </div>
                     {isUrgent ? <UrgentImg /> : null}
                     <div className="form-group mb-3">
                         <label className="form-label">State</label>
-                        <span className="StateStatus" style={{ backgroundColor: stateColor }}>{orderData ? orderData.order.status : "Loading.."}</span>
+                        <span className="StateStatus" style={{ backgroundColor: stateColor }}>
+                            {orderData ? orderData.order.status : "loading..."}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -150,15 +172,25 @@ const Order = () => {
                         <AllItems />
                     </div>
                     <div className="container-fluid TotalPrice">
-                        <p>Total price = {orderData ? orderData.order.total_amount : "loading.."}</p>
+                        <p>
+                            Total price = {orderData ? orderData.order.total_amount : "loading..."}
+                        </p>
                     </div>
                 </div>
             </div>
 
             {/* Action Buttons */}
             <div className="d-flex justify-content-end order-actions mb-4">
-                <button type="button" className="btn btn-success mx-2 ConfirmOrderBtn" onClick={() => console.log(orderData)}>Confirm Order</button>
-                <button type="button" className="btn btn-danger mx-2 DeleteOrderBtn">Delete Order</button>
+                <button
+                    type="button"
+                    className="btn btn-success mx-2 ConfirmOrderBtn"
+                    onClick={() => console.log(orderData)}
+                >
+                    Confirm Order
+                </button>
+                <button type="button" className="btn btn-danger mx-2 DeleteOrderBtn">
+                    Delete Order
+                </button>
             </div>
         </div>
     );
@@ -169,13 +201,10 @@ const OrderPage = () => {
         <>
             <ManagementNav />
             <BodyContent>
-                <span></span>
                 <Order />
             </BodyContent>
         </>
     );
 };
-
-
 
 export default OrderPage;

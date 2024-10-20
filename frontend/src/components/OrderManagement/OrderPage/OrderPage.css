@@ -266,25 +266,32 @@
 }
 
 
-.active {
-    color: #0004f3;
-    font-weight: 500 !important;
-    transform: scale(1.1);
-}
 
+/* OrderNav styling */
 .orderNav {
-    margin-bottom: 2rem;
-    font-size: larger;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    max-width: 100%;
-    background-color: rgba(1, 70, 148, 0.452);
+    background-color: #003366; /* Same navy blue as main navbar */
+    padding: 10px 0; /* Reduce padding to minimize height */
+    border-bottom: 2px solid #005f73; /* Thin border for separation */
+    display: flex;
+    justify-content: space-around;
 }
 
 .orderNavLink {
-    color: black;
+    color: white; /* White text to match the main nav */
+    font-size: 1rem; /* Match font size with main navbar */
+    font-weight: 500; /* Slightly bold */
+    text-decoration: none; /* No underline */
+    padding: 5px 15px; /* Adjust padding for smaller touch area */
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out; /* Simple transition */
 }
 
-
-.chat-page-container {
-    padding: 20px;
+.orderNavLink:hover {
+    color: #00f7ff; /* Teal color on hover, same as main nav hover */
+    background-color: transparent; /* No background color on hover */
 }
+
+.active {
+    border-bottom: 2px solid #00f7ff; /* Simple border to indicate active link */
+    font-weight: 600; /* Bold for active link */
+}
+
