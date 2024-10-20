@@ -16,11 +16,12 @@
 
 /* Order Section Styling */
 .order-section {
-    display: grid;
+    display: flex;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
     gap: 20px; /* Space between items */
     max-width: 2000px;
     margin-top: 2rem !important;
+    flex-wrap: wrap;
 }
 
 /* Title Styles */
@@ -203,8 +204,10 @@
 
 
 .order-actions {
-    max-width: 2000px;
+    max-width: 100%;
     width: 2000px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 
@@ -247,26 +250,31 @@
     height: 2rem !important;
 }
 
+/* Total Price Styling */
 .TotalPrice {
     display: flex;
-    justify-content: flex-end; /* Aligns the total price to the right */
-    align-items: center; /* Vertically centers the text */
-    font-family: 'Poppins', sans-serif; /* Prettier, modern font */
-    line-height: 1.5rem;
-    font-weight: 450; /* Medium bold font */
-    font-size: 1.7rem; /* Slightly larger size */
-    margin-top: 20px; /* Space above the total price */
-    width: 100%; /* Ensures it spans the entire width */
-    background-color: #f2f2f2; /* Dim background color */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+    justify-content: flex-end;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    line-height: 0.5rem;
+    font-size: 0.5rem;
+    font-weight: 500;
+    font-size: 1.1rem; /* Larger font size */
+    color: #333; /* Dark grey text */
+    margin-top: 20px;
+    padding: 5px;
+    background-color: #e9f5f4; /* Subtle teal background */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
 }
 
-
-.remarks {
-    background-color: rgba(184, 171, 0, 0.548);
+.total-amount {
+    color: #00796b; /* Dark teal for total price */
+    font-weight: 600;
+    font-size: 1.2rem; /* Slightly larger for emphasis */
+    margin-left: 10px; /* Space between text and total */
+    margin-right: 1rem;
+    line-height: 0.5rem;
 }
-
 
 
 /* OrderNav styling */
@@ -297,3 +305,25 @@
     font-weight: 600; /* Bold for active link */
 }
 
+
+.OrderItemsDivTitles {
+    border-bottom: 2px solid #009688;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.order-item-row {
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-item-row p {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.order-item-row .col-2,
+.order-item-row .col-3 {
+    display: flex;
+    align-items: center;
+}

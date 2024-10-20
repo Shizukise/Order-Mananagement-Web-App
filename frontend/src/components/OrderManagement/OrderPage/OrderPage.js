@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 import "./OrderPage.css"; // Ensure your CSS is properly linked
 import { useParams } from "react-router-dom";
@@ -10,6 +10,8 @@ const Order = () => {
     const [orderData, setOrderData] = useState(null);
     const [isUrgent, setIsUrgent] = useState(false);
     const [stateColor, setStateColor] = useState("black");
+    const [quantities, setQuantities] = useState(null)
+    const inputRefs = useRef({})
 
     const OrderNav = () => {
         return (
@@ -40,6 +42,11 @@ const Order = () => {
                 setOrderData(data);
                 if (data.order.status === "Pending") {
                     setStateColor("#FFC107");
+                    const quantities = {}
+                    for (const product of data.products) {
+                        quantities[product.product_name] = product.quantity
+                    }
+                    setQuantities(quantities)
                 }
                 if (data.order.urgent === "true") {
                     setIsUrgent(true);
@@ -50,6 +57,19 @@ const Order = () => {
         };
         fetchData();
     }, [orderId]);
+
+    const handleQuantityChange = (name,quantity) => {
+        setQuantities((prevDATA) => ({
+            ...prevDATA,
+            [name]: quantity,
+        }));
+        if (inputRefs.current[name]) {
+            setTimeout(() => {
+                inputRefs.current[name].focus(); // Pass a function to setTimeout
+            }, 1); // Focus the input element
+        }
+    }
+
 
     const AllItems = () => {
         if (orderData) {
@@ -73,7 +93,9 @@ const Order = () => {
                             type="number"
                             min={0}
                             max={product.quantity}
-                            placeholder={product.quantity}
+                            value={quantities ? quantities[product.product_name] : product.quantity}
+                            onChange={(e) => handleQuantityChange(product.product_name,e.target.value,e)}
+                            ref={(el) => (inputRefs.current[product.product_name] = el)}
                         />
                     </div>
                 </div>
@@ -173,9 +195,10 @@ const Order = () => {
                     </div>
                     <div className="container-fluid TotalPrice">
                         <p>
-                            Total price = {orderData ? orderData.order.total_amount : "loading..."}
+                            Total Price: <span className="total-amount">{orderData ? orderData.order.total_amount : "loading..."}</span>
                         </p>
                     </div>
+
                 </div>
             </div>
 
@@ -184,7 +207,7 @@ const Order = () => {
                 <button
                     type="button"
                     className="btn btn-success mx-2 ConfirmOrderBtn"
-                    onClick={() => console.log(orderData)}
+                    onClick={() => console.log(inputRefs)}
                 >
                     Confirm Order
                 </button>
