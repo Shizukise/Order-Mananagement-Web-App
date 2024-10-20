@@ -60,6 +60,7 @@ const CreateOrder = () => {
                                     type="button"
                                     className="btn btn-secondary"
                                     data-bs-dismiss="modal"
+                                    style={{marginRight : "10px"}}
                                     onClick={() => setErrorModal(null)}>
                                     Close
                                 </button>
@@ -107,6 +108,7 @@ const CreateOrder = () => {
                                     type="button"
                                     className="btn btn-secondary"
                                     data-bs-dismiss="modal"
+                                    style={{marginRight : "10px"}}
                                     onClick={onConfirm}>
                                     Confirm order
                                 </button>
@@ -298,7 +300,7 @@ const CreateOrder = () => {
     }
 
     if (!products) {
-        return <p>error loading item</p>;
+        setProducts(["error Loading products."])
     }
 
     function AllProducts() {
