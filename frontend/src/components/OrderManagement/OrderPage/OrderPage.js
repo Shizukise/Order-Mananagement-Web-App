@@ -93,8 +93,8 @@ const Order = () => {
                             type="number"
                             min={0}
                             max={product.quantity}
-                            value={quantities ? quantities[product.product_name] : product.quantity}
-                            onChange={(e) => handleQuantityChange(product.product_name,e.target.value,e)}
+                            value={quantities ? (quantities[product.product_name] <= product.quantity ? quantities[product.product_name] : product.quantitiy) : product.quantity}
+                            onChange={(e) => handleQuantityChange(product.product_name,e.target.value,e)} 
                             ref={(el) => (inputRefs.current[product.product_name] = el)}
                         />
                     </div>
