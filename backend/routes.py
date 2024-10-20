@@ -1,11 +1,9 @@
-from operator import methodcaller
 from backend import app,bcrypt,db
-from backend.models import Product, User, Customer, Order, OrderItem
+from backend.models import OrderMessage, Product, User, Customer, Order, OrderItem
 from flask import render_template, request, jsonify, session
 from flask_login import login_user, logout_user, login_required, current_user
 #sub
 from email_validator import validate_email
-from phone_number_validator.validator import PhoneNumberValidator
 
 
 
@@ -74,10 +72,14 @@ def createOrder():
             db.session.commit()
     else:
         return jsonify({'message' : ''}), 412
+    urgent = False
+    if data['urgent'] == True:
+        urgent = True
+
     customer =  Customer.query.filter_by(customer_name = data['form1Data']['customerName']).first()                               
     newOrder = Order(customer_id = customer.customer_id, creator_id = current_user.user_id, payment_method = data['form2Data']['paymentMethod'],
                      payment_terms = data['form2Data']['paymentTerms'], shipping_address = data['form1Data']['shippingAddress'], 
-                     delivery_method = data['form2Data']['deliveryMethod'], total_amount = sum([i['price'] for i in data['currentOrderItems']]))
+                     delivery_method = data['form2Data']['deliveryMethod'], total_amount = sum([i['price'] for i in data['currentOrderItems']]), urgent = urgent)
     db.session.add(newOrder)
     db.session.commit()
     for item in [i for i in data['currentOrderItems']]:
@@ -114,14 +116,49 @@ def getSearchedOrder(ordernumber):
 @app.route('/getorder<int:orderid>data',methods=['GET'])
 @login_required
 def getAllOrderData(orderid):
-    print("getting complete data")
     try:
         order = Order.query.filter_by(order_id = orderid).first()
+        orderItems = OrderItem.query.filter_by(order_id = orderid).all()
+        products = [i.toItemObject() for i in orderItems]
         if order is None:
             return jsonify({"message":"Order does not exist or not found"}), 500
-        return jsonify({"order": order.toAllData()}), 200
+        return jsonify({"order": order.toAllData(), "products" : products}), 200
     except Exception as e:
         return jsonify({"message": "An internal error occurred"}),500
+
+
+#Send message endpoint (order chat page)
+@app.route('/sendmessage/<int:orderid>', methods=['POST'])
+@login_required
+def SendMessage(orderid):
+    data = request.get_json()
+    try :
+        newMessage = OrderMessage(order_id=orderid,content = data)
+        db.session.add(newMessage)
+        db.session.commit()
+        return jsonify({"message":"Message sent"}),200
+    except Exception as e:
+        return jsonify({"message": "An internal error occurred"}), 500
+
+#Get order messages
+@app.route('/getmessages/<int:orderid>',methods=['GET'])
+@login_required
+def GetMessages(orderid):
+    try:
+        orderMessages = OrderMessage.query.filter_by(order_id = orderid).all()
+        orderMessagesStruct = [i.toChat() for i in orderMessages]
+        return jsonify({"messages" : orderMessagesStruct}),200
+    except Exception as e:
+        return jsonify({"message" : "An internal error error occurred"}), 500
+
+
+
+
+
+
+
+
+
 
 
 #for developing made by chatgpt , only creates 20 mock rows

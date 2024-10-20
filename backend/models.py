@@ -1,5 +1,6 @@
 from datetime import datetime
-from sqlalchemy import ForeignKey
+from math import prod
+from sqlalchemy import ForeignKey, Nullable
 from backend import db, bcrypt, login_manager
 from flask_login import UserMixin
 from sqlalchemy.sql import func
@@ -69,9 +70,13 @@ class Order(db.Model):
 
     shipping_address = db.Column(db.String(200), nullable=False)
     delivery_method = db.Column(db.String(50), nullable=False, default="Standard Shipping")  # e.g., Standard, Urgent
+    
 
     # Order Total
     total_amount = db.Column(db.Integer(), nullable=False, default=0)
+
+    #Urgency
+    urgent = db.Column(db.String(10), nullable=False, default="False")
 
     def toPending(self):
         return {
@@ -79,7 +84,8 @@ class Order(db.Model):
             'order_date' : self.order_date.strftime("%m/%d %H:%M"),
             'customer' : self.customer.customer_name,
             'creator' : self.creator.username,
-            'shipping_address' : self.shipping_address
+            'shipping_address' : self.shipping_address,
+            'urgent' : self.urgent
         }
 
     def toAllData(self):
@@ -93,7 +99,10 @@ class Order(db.Model):
             'payment_method' : self.payment_method,
             'payment_terms' : self.payment_terms,
             'delivery_method' : self.delivery_method,
-            'status' : self.status
+            'status' : self.status,
+            'creator_contact' : '+MockNumber',
+            'customer_email' : self.customer.email,
+            'urgent' : self.urgent
         }
 
 # OrderItem Model (Many-to-Many Relationship between Order and Product)
@@ -111,3 +120,31 @@ class OrderItem(db.Model):
     order = db.relationship('Order', backref='order_items')
     product = db.relationship('Product', backref='order_items')
 
+    def toItemObject(self): 
+        return {
+            'product_ref' : self.product.product_ref,
+            'product_name' : self.product.product_name,
+            'product_price' : self.unit_price,
+            'total_price' : self.total_price,
+            'quantity' : self.quantity
+        }
+    
+
+class OrderMessage(db.Model):
+    __tablename__='order_messages'
+    id = db.Column(db.Integer(), primary_key=True)
+    order_id = db.Column(db.Integer(), ForeignKey('orders.order_id'), nullable=False)
+    content = db.Column(db.Text(), nullable=False)
+    timestamp = db.Column(db.DateTime(), default=func.now(), nullable=False)
+
+    # Relationships
+    order = db.relationship('Order', backref='order_messages')
+
+    def toChat(self):
+        return {
+            'message' : self.content,
+            'timestamp' : self.timestamp.strftime("%m/%d %H:%M")
+        }
+    
+    def __repr__(self):
+        return f'<Message {self.id} - {self.content}>'

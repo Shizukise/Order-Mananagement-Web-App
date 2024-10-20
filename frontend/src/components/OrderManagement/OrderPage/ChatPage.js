@@ -1,11 +1,14 @@
 import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useParams,Link  } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import "./OrderPage.css";
 import "./ChatPage.css"; // New CSS file for chat-specific styles
 
 const Chat = () => {
     const { orderId } = useParams();
+    const [orderMessages,setOrderMessages] = useState()
+    const message = useRef()
+    const [messageSent,setMessageSent] = useState(null)
 
     const OrderNav = () => {
         return (
@@ -28,7 +31,55 @@ const Chat = () => {
         );
     };
     
-    
+
+    useEffect(() => {
+        async function fetchMessages() {
+            try {
+                    const response = await fetch(`/getmessages/${orderId}`)
+                
+                    if (response.ok) {
+                        const result = await response.json()
+                        setOrderMessages(result)
+                        setMessageSent(null)
+                };
+            } catch (error) {
+                console.error("Network error: ", error)
+            }
+        }
+        fetchMessages()
+    },[messageSent])
+
+    async function handleSendMessage () {
+        try {
+            const response = await fetch(`/sendmessage/${orderId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(message.current.value), 
+                credentials: 'include'
+            });
+            if (response.ok) {
+                message.current.value = ""
+                setMessageSent(true)
+            }
+        } catch (error) {
+            console.error("Network error: ", error);
+        }
+        
+    };
+
+    const AllMessages =  () => {
+        if (orderMessages) {
+            return orderMessages.messages.map((message) => (
+                <div className="chat-message" key={message.message}>
+                        <p>{message.message}</p>
+                        <span className="message-time">{message.timestamp}</span>
+                </div>
+            ))
+        } else {
+            return <p></p>
+        }
+    }
+
 
     return (
         <div className="chat-page-container">
@@ -36,20 +87,14 @@ const Chat = () => {
             <div className="chat-container">
                 {/* Chat Messages Section */}
                 <div className="chat-messages">
-                    <div className="chat-message received">
-                        <p>Customer: Hello, I need an update on my order.</p>
-                        <span className="message-time">10:30 AM</span>
-                    </div>
-                    <div className="chat-message sent">
-                        <p>You: The order is in progress and will be delivered soon.</p>
-                        <span className="message-time">10:35 AM</span>
-                    </div>
+                    <AllMessages />
                 </div>
 
                 {/* Chat Input Section */}
                 <div className="chat-input-container">
-                    <input type="text" className="chat-input" placeholder="Type your message here..." />
-                    <button className="btn btn-primary send-button">Send</button>
+                    <input type="text" className="chat-input" placeholder="Type your message here..." ref={message} 
+                    onKeyDown={(e) => {if (e.key === 'Enter') {handleSendMessage()}}}/>
+                    <button className="btn btn-primary send-button" onClick={() => handleSendMessage()}>Send</button>
                 </div>
             </div>
         </div>

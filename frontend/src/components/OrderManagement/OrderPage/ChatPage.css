@@ -59,6 +59,12 @@
     border: 1px solid #388e3c;
 }
 
+.chat-message {
+    background-color: rgba(245, 222, 179, 0.301);
+    align-self: flex-start;
+    border: 1px solid rgba(0, 0, 0, 0.329);
+}
+
 /* Message Time */
 .message-time {
     font-size: 0.8rem;
