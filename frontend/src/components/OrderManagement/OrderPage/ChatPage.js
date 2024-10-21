@@ -23,7 +23,7 @@ const Chat = () => {
                     <Link className="nav-link orderNavLink" to="#">
                         Files
                     </Link>
-                    <Link className="nav-link orderNavLink" to="#">
+                    <Link className="nav-link orderNavLink" to={`/orderhistoric/${orderId}`}>
                         History
                     </Link>
                 </nav>

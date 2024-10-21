@@ -26,7 +26,7 @@ const Order = () => {
                     <Link className="nav-link orderNavLink" to="#">
                         Files
                     </Link>
-                    <Link className="nav-link orderNavLink" to="#">
+                    <Link className="nav-link orderNavLink" to={`/orderhistoric/${orderId}`}>
                         History
                     </Link>
                 </nav>
@@ -79,13 +79,13 @@ const Order = () => {
                         <p>{product.product_name}</p>
                     </div>
                     <div className="col-2">
-                        <p>{product.product_price}</p>
+                        <p>{product.product_price},00€</p>
                     </div>
                     <div className="col-2">
                         <p>{product.quantity}</p>
                     </div>
                     <div className="col-2">
-                        <p>{product.total_price}</p>
+                        <p>{product.total_price},00€</p>
                     </div>
                     <div className="col-2">
                         <input
@@ -195,7 +195,7 @@ const Order = () => {
                     </div>
                     <div className="container-fluid TotalPrice">
                         <p>
-                            Total Price: <span className="total-amount">{orderData ? orderData.order.total_amount : "loading..."}</span>
+                            Total Price: <span className="total-amount">{orderData ? orderData.order.total_amount : "loading..."},00 €</span>
                         </p>
                     </div>
 
@@ -207,7 +207,7 @@ const Order = () => {
                 <button
                     type="button"
                     className="btn btn-success mx-2 ConfirmOrderBtn"
-                    onClick={() => console.log(inputRefs)}
+                    onClick={() => console.log(orderData)}
                 >
                     Confirm Order
                 </button>

@@ -1,5 +1,5 @@
 from backend import app,bcrypt,db
-from backend.models import OrderMessage, Product, User, Customer, Order, OrderItem
+from backend.models import OrderHistoric, OrderMessage, Product, User, Customer, Order, OrderItem
 from flask import render_template, request, jsonify, session
 from flask_login import login_user, logout_user, login_required, current_user
 #sub
@@ -87,6 +87,9 @@ def createOrder():
                                  quantity = item['quantity'], unit_price = item['productPrice'], total_price = item['price'])
         db.session.add(newOrderItem)
     db.session.commit()
+    newHistoricEvent = OrderHistoric(order_id = newOrder.order_id, event = f"Order created by {current_user.username}.")
+    db.session.add(newHistoricEvent)
+    db.session.commit()
     message = "Order created sucessfully!"
     return jsonify(message),200
 
@@ -151,7 +154,16 @@ def GetMessages(orderid):
     except Exception as e:
         return jsonify({"message" : "An internal error error occurred"}), 500
 
-
+#Get order historic
+@app.route('/getorderhistoric/<int:orderid>' , methods=['GET'])
+def GetHistoric(orderid):
+    try:
+        orderHistoric = OrderHistoric.query.filter_by(order_id = orderid).all()
+        orderHistoricStructured = [i.toEvent() for i in orderHistoric]
+        print(orderHistoricStructured)
+        return jsonify({"events":orderHistoricStructured}), 200
+    except Exception as e:
+        return jsonify({"message":"An internal error occurred"}),500
 
 
 

@@ -102,7 +102,8 @@ class Order(db.Model):
             'status' : self.status,
             'creator_contact' : '+MockNumber',
             'customer_email' : self.customer.email,
-            'urgent' : self.urgent
+            'urgent' : self.urgent,
+            "customer_contact" : self.customer.phone
         }
 
 # OrderItem Model (Many-to-Many Relationship between Order and Product)
@@ -148,3 +149,20 @@ class OrderMessage(db.Model):
     
     def __repr__(self):
         return f'<Message {self.id} - {self.content}>'
+    
+
+class OrderHistoric(db.Model):
+    __tablename__='order_historic'
+    id = db.Column(db.Integer(), primary_key = True)
+    order_id = db.Column(db.Integer(), ForeignKey('orders.order_id'), nullable=False )
+    event = db.Column(db.Text(), nullable=False)
+    timestamp = db.Column(db.DateTime(), default=func.now(), nullable=False)
+
+    # Relationship
+    order = db.relationship('Order', backref='order_historic')
+
+    def toEvent(self):
+        return {
+            "event" : self.event,
+            "timestamp" : self.timestamp.strftime("%m/%d %H:%M")
+        }
