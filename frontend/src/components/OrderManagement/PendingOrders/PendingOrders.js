@@ -57,8 +57,11 @@ const OrderTable = () => {
                 try {
                     const response = await fetch(`/getorder${searchState}`);
                     const data = await response.json();
-                    console.log(data)
-                    setOrdersArray([data.order])
+                    if (response.status === 404) {
+                        setOrdersArray([])
+                    } else {
+                        setOrdersArray([data.order])
+                    }
                 } catch (error) {
                     console.error("error fetching order:", error)
                 }

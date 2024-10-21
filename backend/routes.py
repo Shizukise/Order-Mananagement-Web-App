@@ -109,7 +109,7 @@ def getSearchedOrder(ordernumber):
     try:
         order = Order.query.filter_by(order_id = ordernumber).first()
         if order is None:
-            return jsonify({"message":"Order does not exist or not found"}), 500
+            return jsonify({"message":"Order does not exist or not found"}), 404
         print(order)
         return jsonify({"order": order.toPending()}), 200
     except Exception as e:
