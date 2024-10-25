@@ -11,6 +11,7 @@ import CreateOrder from './components/OrderManagement/CreateOrder/CreateOrder';
 import OrderPage from './components/OrderManagement/OrderPage/OrderPage';
 import ChatPage from './components/OrderManagement/OrderPage/ChatPage';
 import Historic from './components/OrderManagement/OrderPage/HistoricPage';
+import DeliveryPage from './components/OrderManagement/Delivery/DeliveryPage';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path='/order/:orderId' element={<ProtectedRoute><OrderPage/></ProtectedRoute>}/>
           <Route path='/orderchat/:orderId' element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
           <Route path='/orderhistoric/:orderId' element={<ProtectedRoute><Historic/></ProtectedRoute>}/>
+          <Route path='/delivery' element={<ProtectedRoute><DeliveryPage/></ProtectedRoute>}/>
         </Routes>
       </AuthProvider>
     </Router>

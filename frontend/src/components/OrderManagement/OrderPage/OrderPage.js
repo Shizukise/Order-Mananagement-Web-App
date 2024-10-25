@@ -106,7 +106,7 @@ const Order = () => {
                             value={quantities ? (quantities[product.product_name] <= product.quantity ? quantities[product.product_name] : product.quantitiy) : product.quantity}
                             onChange={(e) => handleQuantityChange(product.product_name,e.target.value,e)} 
                             ref={(el) => (inputRefs.current[product.product_name] = el)}
-                            readOnly = {delivery}
+                            disabled = {delivery}
                         />
                     </div>
                 </div>
@@ -125,7 +125,6 @@ const Order = () => {
             body: JSON.stringify({ quantities }), 
             credentials: 'include'
         });
-        const result = await response.json()
         if (response.ok) {
             navigate("/pendingorders")
         }      
