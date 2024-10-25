@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 import "./OrderPage.css"; // Ensure your CSS is properly linked
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import UrgentImg from "../../UrgentImg";
 import { Link } from "react-router-dom";
 
@@ -11,7 +11,9 @@ const Order = () => {
     const [isUrgent, setIsUrgent] = useState(false);
     const [stateColor, setStateColor] = useState("black");
     const [quantities, setQuantities] = useState(null)
+    const [delivery, setDelivery] = useState(false)
     const inputRefs = useRef({})
+    const navigate = useNavigate()
 
     const OrderNav = () => {
         return (
@@ -47,6 +49,14 @@ const Order = () => {
                         quantities[product.product_name] = product.quantity
                     }
                     setQuantities(quantities)
+                } else if (data.order.status === "Delivery") {
+                    setDelivery(true)
+                    setStateColor("#4FC3F7");
+                    const quantities = {}
+                    for (const product of data.products) {
+                        quantities[product.product_name] = product.quantity
+                    }
+                    setQuantities(quantities)
                 }
                 if (data.order.urgent === "true") {
                     setIsUrgent(true);
@@ -65,8 +75,8 @@ const Order = () => {
         }));
         if (inputRefs.current[name]) {
             setTimeout(() => {
-                inputRefs.current[name].focus(); // Pass a function to setTimeout
-            }, 1); // Focus the input element
+                inputRefs.current[name].focus(); 
+            }, 1); 
         }
     }
 
@@ -90,12 +100,13 @@ const Order = () => {
                     <div className="col-2">
                         <input
                             className="IndItemQtToDeliver"
-                            type="number"
+                            type={delivery ? "text": "number"}
                             min={0}
                             max={product.quantity}
                             value={quantities ? (quantities[product.product_name] <= product.quantity ? quantities[product.product_name] : product.quantitiy) : product.quantity}
                             onChange={(e) => handleQuantityChange(product.product_name,e.target.value,e)} 
                             ref={(el) => (inputRefs.current[product.product_name] = el)}
+                            readOnly = {delivery}
                         />
                     </div>
                 </div>
@@ -104,6 +115,24 @@ const Order = () => {
             return <p>Error loading items</p>;
         }
     };
+
+
+    
+    async function confirm() {
+        const response = fetch(`/confirmorder/${orderId}`,{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quantities }), 
+            credentials: 'include'
+        });
+        const result = await response.json()
+        if (response.ok) {
+            navigate("/pendingorders")
+        }      
+    }
+    
+
+
 
     return (
         <div className="order-page-container">
@@ -207,7 +236,7 @@ const Order = () => {
                 <button
                     type="button"
                     className="btn btn-success mx-2 ConfirmOrderBtn"
-                    onClick={() => console.log(orderData)}
+                    onClick={() => confirm()}
                 >
                     Confirm Order
                 </button>

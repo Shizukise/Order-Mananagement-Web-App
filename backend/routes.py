@@ -1,3 +1,5 @@
+from ast import Or
+from email import message
 from backend import app,bcrypt,db
 from backend.models import OrderHistoric, OrderMessage, Product, User, Customer, Order, OrderItem
 from flask import render_template, request, jsonify, session
@@ -160,14 +162,21 @@ def GetHistoric(orderid):
     try:
         orderHistoric = OrderHistoric.query.filter_by(order_id = orderid).all()
         orderHistoricStructured = [i.toEvent() for i in orderHistoric]
-        print(orderHistoricStructured)
         return jsonify({"events":orderHistoricStructured}), 200
     except Exception as e:
         return jsonify({"message":"An internal error occurred"}),500
 
 
-
-
+#Confirm order (FUll ORDER)
+@app.route('/confirmorder/<int:orderid>',methods=['POST'])
+@login_required
+def ConfirmFullOrder(orderid):
+    order = Order.query.filter_by(order_id = orderid).first()
+    order.status = "Delivery"
+    historyLog = OrderHistoric(order_id = orderid, event = f"Order confirmed and sent to delivery by {current_user.username}.")
+    db.session.add(historyLog)
+    db.session.commit()
+    return jsonify({"message":"Order confirmed successfully"}),200
 
 
 
