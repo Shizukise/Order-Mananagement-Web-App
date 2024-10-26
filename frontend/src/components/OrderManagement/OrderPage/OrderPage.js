@@ -13,6 +13,8 @@ const Order = () => {
     const [quantities, setQuantities] = useState(null)
     const [delivery, setDelivery] = useState(false)
     const [confirmationModal,setConfirmationModal] = useState(false)
+    const [deleteModal, setDeleteModal] = useState(false)
+    const [refresh,setRefresh] = useState(true)
     const inputRefs = useRef({})
     const navigate = useNavigate()
 
@@ -38,7 +40,12 @@ const Order = () => {
     };
 
     const handleConfirmationModal = () => setConfirmationModal(true)
-    const handleCloseModal = () => setConfirmationModal(false)
+    const handleCloseModal = () => {
+        setConfirmationModal(false);
+        setDeleteModal(false);
+        }
+    const handleDeleteModal = () => setDeleteModal(true)
+    
 
     const ConfirmationModal = ({ show, onClose, title, children, onSave }) => {
         if (!show) return null; 
@@ -62,6 +69,36 @@ const Order = () => {
                             </button>
                             <button type="button" className="btn-primary" onClick={onSave}>
                                 Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const DeleteModal = ({ show, onClose, title, children, onSave }) => {
+        if (!show) return null; 
+    
+        return (
+            <div className="custom-modal" onClick={onClose}>
+                <div className="custom-modal-dialog" >
+                    <div className="custom-modal-content">
+                        <div className="custom-modal-header">
+                            <h5 className="custom-modal-title">{title}</h5>
+                            <button type="button" className="close-btn" onClick={onClose}>
+                                &times;
+                            </button>
+                        </div>
+                        <div className="custom-modal-body">
+                            {children}
+                        </div>
+                        <div className="custom-modal-footer">
+                            <button type="button" className="btn-secondary" onClick={onClose}>
+                                Close
+                            </button>
+                            <button type="button" className="btn-danger" onClick={onSave}>
+                                Delete
                             </button>
                         </div>
                     </div>
@@ -100,7 +137,7 @@ const Order = () => {
             }
         };
         fetchData();
-    }, [orderId]);
+    }, [orderId,refresh]);
 
     const handleQuantityChange = (name,quantity) => {
         setQuantities((prevDATA) => ({
@@ -161,15 +198,30 @@ const Order = () => {
         });
         if (response.ok) {
             console.log("should navigate")
-            navigate("/pendingorders")
+            navigate(`/order/${orderId}`)
+            setConfirmationModal(false)
+            setRefresh(!refresh)
         }      
+    }
+
+    async function deleteOrder() {
+        const response = await fetch(`/deleteorder/${orderId}`,{
+            method: 'DELETE',
+            headers : { 'Content-Type' : 'application/json' },
+            credentials : 'include'
+        });
+        if (response.ok) {
+            navigate('/pendingorders')
+            setConfirmationModal(false)
+        }
     }
     
     const ActionButtons = () => {
         if (delivery) {
             return (
                 <div className="d-flex justify-content-end order-actions mb-4">
-                    <button type="button" className="btn btn-danger mx-2 DeleteOrderBtn">
+                    <button type="button" className="btn btn-danger mx-2 DeleteOrderBtn"
+                        onClick={() => handleDeleteModal()}>
                         Delete Order
                     </button>
                 </div>
@@ -184,7 +236,8 @@ const Order = () => {
                     >
                         Confirm Order
                     </button>
-                    <button type="button" className="btn btn-danger mx-2 DeleteOrderBtn">
+                    <button type="button" className="btn btn-danger mx-2 DeleteOrderBtn"
+                        onClick={() => handleDeleteModal()}>
                         Delete Order
                     </button>
                 </div>
@@ -295,8 +348,17 @@ const Order = () => {
                 onSave={() => confirm()}
                 title="Alert"
             >
-                <p>Do you wish to Confirm?</p>
+                <p>Do you wish to confirm order and send it to delivery?</p>
             </ConfirmationModal>
+
+            <DeleteModal
+                show={deleteModal}
+                onClose={handleCloseModal}
+                onSave={() => deleteOrder()}
+                title="Alert"
+            >
+                <p>Do you really wish to delete order?</p>
+            </DeleteModal>
 
             {/* Action Buttons */}
             <ActionButtons />

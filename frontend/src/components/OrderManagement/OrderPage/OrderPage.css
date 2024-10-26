@@ -379,7 +379,7 @@
     padding: 10px 0;
 }
 
-.btn-secondary, .btn-primary {
+.btn-secondary, .btn-primary, .btn-danger {
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
@@ -394,6 +394,12 @@
 
 .btn-primary {
     background-color: #007bff;
+    color: #fff;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #d42542;
     color: #fff;
     border: none;
 }
