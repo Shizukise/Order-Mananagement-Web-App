@@ -12,6 +12,7 @@ const Order = () => {
     const [stateColor, setStateColor] = useState("black");
     const [quantities, setQuantities] = useState(null)
     const [delivery, setDelivery] = useState(false)
+    const [confirmationModal,setConfirmationModal] = useState(false)
     const inputRefs = useRef({})
     const navigate = useNavigate()
 
@@ -32,6 +33,39 @@ const Order = () => {
                         History
                     </Link>
                 </nav>
+            </div>
+        );
+    };
+
+    const handleConfirmationModal = () => setConfirmationModal(true)
+    const handleCloseModal = () => setConfirmationModal(false)
+
+    const ConfirmationModal = ({ show, onClose, title, children, onSave }) => {
+        if (!show) return null; 
+    
+        return (
+            <div className="custom-modal" onClick={onClose}>
+                <div className="custom-modal-dialog" onClick={(e) => e.stopPropagation()}>
+                    <div className="custom-modal-content">
+                        <div className="custom-modal-header">
+                            <h5 className="custom-modal-title">{title}</h5>
+                            <button type="button" className="close-btn" onClick={onClose}>
+                                &times;
+                            </button>
+                        </div>
+                        <div className="custom-modal-body">
+                            {children}
+                        </div>
+                        <div className="custom-modal-footer">
+                            <button type="button" className="btn-secondary" onClick={onClose}>
+                                Close
+                            </button>
+                            <button type="button" className="btn-primary" onClick={onSave}>
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     };
@@ -119,18 +153,44 @@ const Order = () => {
 
     
     async function confirm() {
-        const response = fetch(`/confirmorder/${orderId}`,{
+        const response = await fetch(`/confirmorder/${orderId}`,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ quantities }), 
             credentials: 'include'
         });
         if (response.ok) {
+            console.log("should navigate")
             navigate("/pendingorders")
         }      
     }
     
-
+    const ActionButtons = () => {
+        if (delivery) {
+            return (
+                <div className="d-flex justify-content-end order-actions mb-4">
+                    <button type="button" className="btn btn-danger mx-2 DeleteOrderBtn">
+                        Delete Order
+                    </button>
+                </div>
+            )
+        } else {
+            return (
+                <div className="d-flex justify-content-end order-actions mb-4">
+                    <button
+                        type="button"
+                        className="btn btn-success mx-2 ConfirmOrderBtn"
+                        onClick={() => handleConfirmationModal()}
+                    >
+                        Confirm Order
+                    </button>
+                    <button type="button" className="btn btn-danger mx-2 DeleteOrderBtn">
+                        Delete Order
+                    </button>
+                </div>
+            )
+        }
+    }
 
 
     return (
@@ -229,23 +289,21 @@ const Order = () => {
 
                 </div>
             </div>
+            <ConfirmationModal
+                show={confirmationModal}
+                onClose={handleCloseModal}
+                onSave={() => confirm()}
+                title="Alert"
+            >
+                <p>Do you wish to Confirm?</p>
+            </ConfirmationModal>
 
             {/* Action Buttons */}
-            <div className="d-flex justify-content-end order-actions mb-4">
-                <button
-                    type="button"
-                    className="btn btn-success mx-2 ConfirmOrderBtn"
-                    onClick={() => confirm()}
-                >
-                    Confirm Order
-                </button>
-                <button type="button" className="btn btn-danger mx-2 DeleteOrderBtn">
-                    Delete Order
-                </button>
-            </div>
+            <ActionButtons />
         </div>
     );
 };
+
 
 const OrderPage = () => {
     return (

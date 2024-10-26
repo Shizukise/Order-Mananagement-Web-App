@@ -1,4 +1,5 @@
 from ast import Or
+from crypt import methods
 from email import message
 from backend import app,bcrypt,db
 from backend.models import OrderHistoric, OrderMessage, Product, User, Customer, Order, OrderItem
@@ -58,7 +59,7 @@ def createOrder():
     if not all([data.get('form1Data'), data.get('form2Data'), data.get('currentOrderItems')]):
         return jsonify({'message' : 'Missing required fields'}), 400
     
-    def validateCellphone(number):
+    def validateCellphone(number):  #in ui is missing user error for more than 10 characters
         return len(number) == 10
 
     def validateAllArticles(array):
@@ -177,6 +178,20 @@ def ConfirmFullOrder(orderid):
     db.session.add(historyLog)
     db.session.commit()
     return jsonify({"message":"Order confirmed successfully"}),200
+
+
+#Get orders by address
+@app.route('/getaddresses', methods=['GET'])
+@login_required
+def GetOrdersByAddress():
+    addresses = [i.shipping_address for i in Order.query.all()]
+    orders = {}
+    for address in addresses:
+        current_orders = Order.query.filter_by(shipping_address = address).all()
+        orders[address] = len([i for i in current_orders if i.status == 'Delivery'])
+    return jsonify({"orders":[i for i in orders.items()]}),200
+
+
 
 
 

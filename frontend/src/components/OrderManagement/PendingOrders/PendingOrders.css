@@ -47,7 +47,6 @@
     word-break: break-all;   /* Break long words when necessary */
     max-width: 1px; /* Force column width to adjust based on screen */
     border: 1px solid rgba(62, 66, 3, 0.103);
-    font-weight: 600;
 }
 
 

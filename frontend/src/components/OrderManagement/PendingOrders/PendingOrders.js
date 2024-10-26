@@ -108,6 +108,16 @@ const OrderTable = () => {
                 </thead>
                 <tbody>
                     <AllOrders />
+                    <button onClick={async () => {
+                        const response = await fetch('/create20rows', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include'
+                        })
+                        if (response.ok) {
+                            alert('Created 20 mockup orders')
+                        }                     
+                    }}>Development : Create 20 mockup orders</button>
                 </tbody>
             </table>
         </div>
