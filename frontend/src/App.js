@@ -12,6 +12,7 @@ import OrderPage from './components/OrderManagement/OrderPage/OrderPage';
 import ChatPage from './components/OrderManagement/OrderPage/ChatPage';
 import Historic from './components/OrderManagement/OrderPage/HistoricPage';
 import DeliveryPage from './components/OrderManagement/Delivery/DeliveryPage';
+import OrdersByAddress from './components/OrderManagement/OrdersByAddress/OrdersByAddress';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path='/orderchat/:orderId' element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
           <Route path='/orderhistoric/:orderId' element={<ProtectedRoute><Historic/></ProtectedRoute>}/>
           <Route path='/delivery' element={<ProtectedRoute><DeliveryPage/></ProtectedRoute>}/>
+          <Route path='/ordersbyaddress/:address' element={<ProtectedRoute><OrdersByAddress/></ProtectedRoute>}/>
         </Routes>
       </AuthProvider>
     </Router>

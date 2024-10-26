@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 import './DeliveryPage.css';
+import { useNavigate } from "react-router-dom";
 
 const OrderTable = () => {
     const [orders,setOrders] = useState()
-
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -29,7 +30,7 @@ const OrderTable = () => {
                 <td>{order[0]}</td>
                 <td>{order[1]}</td>
                 <td>
-                    <button className="go-to-address-btn" onClick={() => alert(`Going to ${order.address}`)}>
+                    <button className="go-to-address-btn" onClick={() => navigate(`/ordersbyaddress/${order[0]}`)}>
                         Show orders
                     </button>
                 </td>

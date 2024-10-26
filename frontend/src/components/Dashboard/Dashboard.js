@@ -1,4 +1,5 @@
 import Navbar from "../Navbar/Navbar";
+import './Dashboard.css'
 /* import { useAuth } from "../../contexts/AuthContext"; */
 
 
