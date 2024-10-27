@@ -1,5 +1,6 @@
 from datetime import datetime
 from math import prod
+from os import urandom
 from sqlalchemy import ForeignKey, Nullable
 from backend import db, bcrypt, login_manager
 from flask_login import UserMixin
@@ -104,6 +105,15 @@ class Order(db.Model):
             'customer_email' : self.customer.email,
             'urgent' : self.urgent,
             "customer_contact" : self.customer.phone
+        }
+    
+    def toDeliverByAddress(self):
+        return {
+            'order_id' : self.order_id,
+            'customer' : self.customer.customer_name,
+            'creation_date' : self.order_date.strftime("%m/%d %H:%M"),
+            'delivery_method' : self.delivery_method,
+            'urgent' : self.urgent
         }
 
 # OrderItem Model (Many-to-Many Relationship between Order and Product)

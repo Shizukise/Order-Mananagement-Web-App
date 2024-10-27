@@ -180,7 +180,20 @@ def ConfirmFullOrder(orderid):
     return jsonify({"message":"Order confirmed successfully"}),200
 
 
-#Get orders by address
+#Delete order
+@app.route('/deleteorder/<int:orderid>', methods=['DELETE'])
+@login_required
+def DeleteOrder(orderid):
+    order = Order.query.filter_by(order_id = orderid).first()   #later this will have user role permissions
+    db.session.delete(order)
+    db.session.commit()
+    return jsonify({"message" : "Order deleter successfully"})
+
+
+
+
+
+#Get orders by address(Delivery Page)
 @app.route('/getaddresses', methods=['GET'])
 @login_required
 def GetOrdersByAddress():
@@ -192,8 +205,30 @@ def GetOrdersByAddress():
     return jsonify({"orders":[i for i in orders.items()]}),200
 
 
+#Get orders by address(Individual address page)
+@app.route('/getordersbyaddress/<address>',methods=['GET'])
+@login_required
+def GetOrdersByAddress2(address):
+    orders = Order.query.filter_by(shipping_address = address).all()
+    print([i.toDeliverByAddress() for i in orders if i.status == 'Delivery'])
+    return jsonify({'orders' : [i.toDeliverByAddress() for i in orders if i.status == 'Delivery'] }),200
 
 
+
+#Send selected orders
+@app.route('/sendselected',methods=['POST'])
+@login_required
+def sendSelected():
+    data = request.get_json()
+    orders = []
+    print(data)
+    for id in data:
+        print(id)
+        orders.append(Order.query.filter_by(order_id = int(id)).first())
+    for order in orders:
+        order.status = 'Sent'
+    db.session.commit()
+    return jsonify({"test":"ing"}),200
 
 
 

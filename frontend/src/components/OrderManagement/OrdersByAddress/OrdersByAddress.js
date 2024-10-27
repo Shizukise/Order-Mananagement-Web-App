@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ManagementNav, BodyContent } from "../ManagementNav/Managementnav";
 import UrgentImg from "../../UrgentImg";
 import './OrdersByAddress.css';
@@ -9,6 +9,7 @@ const OrdersByAddress = () => {
     const [selectedOrders, setSelectedOrders] = useState([]);
     const [allIds,setAllIds] = useState(null)
     const { address } = useParams();
+    const navigate = useNavigate()
 
     const handleSelectOrder = (orderId) => {
         setSelectedOrders((prevSelected) => 
@@ -49,8 +50,23 @@ const OrdersByAddress = () => {
     }
 
     const handleDeliverSelected = () => {
-        console.log(selectedOrders);
-        // Add delivery logic here
+        async function deliverSelected() {
+            try {
+                const response = await fetch(`/sendselected`,{
+                    method : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(selectedOrders), 
+                    credentials: 'include'
+                })
+                if (response.ok) {
+                    alert("Orders sent!")
+                    navigate('/management')
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        deliverSelected()
     };
 
     const OrderTable = ({ orders, onSelectOrder }) => {
