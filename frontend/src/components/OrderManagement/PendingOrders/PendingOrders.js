@@ -77,7 +77,7 @@ const OrderTable = () => {
                 <tr key={order.order_id}>
                     <th scope="row">
                         <Link to={`/order/${order.order_id}`}>
-                        {order.order_id} 
+                        Order Number - {order.order_id} 
                         </Link>
                     </th>
                     <td>{order.customer}</td>
@@ -88,7 +88,7 @@ const OrderTable = () => {
         } else {
             return (
                 <tr>
-                    <td colSpan="4">No orders available.</td>
+                    <td colSpan="4"></td>
                 </tr>
             );
         }
@@ -108,16 +108,6 @@ const OrderTable = () => {
                 </thead>
                 <tbody>
                     <AllOrders />
-                    <button onClick={async () => {
-                        const response = await fetch('/create20rows', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            credentials: 'include'
-                        })
-                        if (response.ok) {
-                            alert('Created 20 mockup orders')
-                        }                     
-                    }}>Development : Create 20 mockup orders</button>
                 </tbody>
             </table>
         </div>

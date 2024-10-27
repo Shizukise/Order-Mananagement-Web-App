@@ -1,0 +1,60 @@
+/* Dashboard Container */
+.dashboard-container {
+    max-width: 100%;
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #003366;
+    border-bottom: 2px solid #009688;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+}
+
+/* Table Styling */
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.dashboard-table thead th {
+    background-color: #003366;
+    color: #ffffff;
+    padding: 12px;
+    text-align: left;
+}
+
+.dashboard-table tbody tr td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Status Color Classes */
+.status-pending {
+    background-color: #FFC107; /* Yellow for Pending */
+}
+
+.status-delivery {
+    background-color: #4FC3F7; /* Light blue for Delivery */
+}
+
+.status-sent {
+    background-color: #81C784; /* Green for Sent */
+}
+
+/* Urgent Row Icon Styling */
+.dashboard-table tbody tr td {
+    font-weight: 500;
+}
+
+.dashboard-table tbody tr:hover {
+    background-color: #f4f4f4;
+}

@@ -60,7 +60,7 @@ const OrdersByAddress = () => {
                 })
                 if (response.ok) {
                     alert("Orders sent!")
-                    navigate('/management')
+                    navigate('/pendingorders')
                 }
             } catch (error) {
                 console.log(error)

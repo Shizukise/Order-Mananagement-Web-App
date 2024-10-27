@@ -12,6 +12,7 @@ const Order = () => {
     const [stateColor, setStateColor] = useState("black");
     const [quantities, setQuantities] = useState(null)
     const [delivery, setDelivery] = useState(false)
+    const [sent, setSent] = useState(false)
     const [confirmationModal,setConfirmationModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     const [refresh,setRefresh] = useState(true)
@@ -128,6 +129,14 @@ const Order = () => {
                         quantities[product.product_name] = product.quantity
                     }
                     setQuantities(quantities)
+                } else if (data.order.status == "Sent") {
+                    setSent(true)
+                    setStateColor("#81C784")
+                    const quantities = {}
+                    for (const product of data.products) {
+                        quantities[product.product_name] = product.quantity
+                    }
+                    setQuantities(quantities)
                 }
                 if (data.order.urgent === "true") {
                     setIsUrgent(true);
@@ -177,7 +186,7 @@ const Order = () => {
                             value={quantities ? (quantities[product.product_name] <= product.quantity ? quantities[product.product_name] : product.quantitiy) : product.quantity}
                             onChange={(e) => handleQuantityChange(product.product_name,e.target.value,e)} 
                             ref={(el) => (inputRefs.current[product.product_name] = el)}
-                            disabled = {delivery}
+                            disabled = {delivery || sent}
                         />
                     </div>
                 </div>
@@ -224,6 +233,11 @@ const Order = () => {
                         onClick={() => handleDeleteModal()}>
                         Delete Order
                     </button>
+                </div>
+            )
+        } else if (sent) {
+            return (
+                <div className="d-flex justify-content-end order-actions mb-4">
                 </div>
             )
         } else {

@@ -97,6 +97,14 @@ def createOrder():
     return jsonify(message),200
 
 
+#Get all orders
+@app.route('/getallorders' , methods=['GET'])
+@login_required
+def getAllOrders():
+    orders = Order.query.all()
+    return jsonify({"orders":[i.toAllData() for i in orders]})
+
+
 #Get pending orders endpoint
 @app.route('/getpendingorders',methods=['GET'])
 @login_required
@@ -201,7 +209,8 @@ def GetOrdersByAddress():
     orders = {}
     for address in addresses:
         current_orders = Order.query.filter_by(shipping_address = address).all()
-        orders[address] = len([i for i in current_orders if i.status == 'Delivery'])
+        if len([i for i in current_orders if i.status == 'Delivery']) > 0:
+            orders[address] = len([i for i in current_orders if i.status == 'Delivery'])        
     return jsonify({"orders":[i for i in orders.items()]}),200
 
 
