@@ -11,11 +11,14 @@ const CreateOrder = () => {
     const [currentOrderItems, setCurrentOrderItems] = useState([]);
     const quantity = useRef();
     const selected = useRef();
+    const selectedCustomer = useRef();
     const [summaryBill, setSummaryBill] = useState([]);
     const [errorModal, setErrorModal] = useState(null);
     const [confirmationModal, setConfirmationModal] = useState(null)
     const [billingSameAsShipping, setBillingSameAsShipping] = useState(false);
     const [urgent, setUrgent] = useState(false);
+    const [customers, setCustomers] = useState(null);
+    const [presetCustomer, setPresetCustomer] = useState(false);
 
     const navigate = useNavigate()
 
@@ -136,6 +139,16 @@ const CreateOrder = () => {
         shippingAddress: "",
         billingAddress: "",
     });
+
+    const resetForm1Data = () => {
+        setForm1Data({
+            customerName: "",
+            companyName: "",
+            customerEmail: "",
+            customerPhone: "",
+        })
+    };
+
     const [form2Data, setForm2Data] = useState({
         paymentMethod: "Credit Card",
         paymentTerms: "",
@@ -153,8 +166,8 @@ const CreateOrder = () => {
     // Validation function for quantity
 
     const ValidateQuantity = (quantity) => {
-        let number = parseInt(quantity,10)
-        console.log(typeof(number))
+        let number = parseInt(quantity, 10)
+        console.log(typeof (number))
         if (isNaN(number)) {
             return false
         }
@@ -172,6 +185,44 @@ const CreateOrder = () => {
         const phoneRegex = /^[0-9]{10}$/;
         return phoneRegex.test(phone);
     };
+
+    // handle registered customer select
+    const handleRegisteredCustomer = (e) => {
+        const { value } = e.target;
+        setForm1Data((prevData) => ({
+            ...prevData,
+            customerName: selectedCustomer.current.value,
+        }));
+        console.log(form1Data.customerName)
+        if (selectedCustomer.current.value === "Register new customer") {
+            console.log("here1")
+            resetForm1Data()
+            setPresetCustomer(false)
+            console.log("here")
+        } else {
+            async function fetchCustomer() {
+                try {
+                    const response = await fetch(`/getcustomerdata/${value}`)
+                    const result = await response.json()
+                    if (response.ok) {
+                        setForm1Data((prevData) => ({
+                            ...prevData,
+                            customerName: result.customer_name,
+                            companyName: result.company_name,
+                            customerEmail: result.email,
+                            customerPhone: result.phone_number
+                        }));
+                        setPresetCustomer(true)
+                    };
+                } catch (error) {
+                    console.log("Error : ", error)
+                };
+            };
+            fetchCustomer()
+        };
+    };
+
+
 
     // Handle form1 changes with validation
     const handleChange1 = (e) => {
@@ -300,6 +351,8 @@ const CreateOrder = () => {
         handleGenerate();
     }, [currentOrderItems]);
 
+    // Products and customers fetch
+
     useEffect(() => {
         async function fetchProducts() {
             try {
@@ -312,7 +365,17 @@ const CreateOrder = () => {
                 setLoading(false);
             }
         }
+        async function fetchCustomers() {
+            try {
+                const response = await fetch('/getallcustomers');
+                const result = await response.json();
+                setCustomers(result)
+            } catch (error) {
+                console.log("Error fetching data: ", error)
+            }
+        }
         fetchProducts();
+        fetchCustomers();
     }, []);
 
     if (loading) {
@@ -321,6 +384,19 @@ const CreateOrder = () => {
 
     if (!products) {
         setProducts(["error Loading products."])
+    }
+
+    if (!customers) {
+        setCustomers(['error loading customers.'])
+    }
+
+
+    function AllCustomers() {
+        return customers.map((customer) => (
+            <option key={customer} value={customer}>
+                {customer}
+            </option>
+        ))
     }
 
     function AllProducts() {
@@ -512,6 +588,22 @@ const CreateOrder = () => {
                         <div className="creator-customer-details">
                             <div className="section-title">Customer Details</div>
                             <div className="form-group mb-3">
+                                <label htmlFor="CustomerSelect" className="form-label">
+                                    Registered Customers
+                                </label>
+                                <select
+                                    className="form-control"
+                                    id="CustomerSelect"
+                                    name="CustomerSelect"
+                                    ref={selectedCustomer}
+                                    onChange={(e) => {handleRegisteredCustomer(e)}}
+                                    value={form1Data.customerName}
+                                >
+                                    <option>Register new customer</option>
+                                    <AllCustomers />
+                                </select>
+                            </div>
+                            <div className="form-group mb-3">
                                 <label htmlFor="customerName" className="form-label">
                                     Customer Name
                                 </label>
@@ -523,6 +615,7 @@ const CreateOrder = () => {
                                     value={form1Data.customerName}
                                     onChange={handleChange1}
                                     name="customerName"
+                                    readOnly = {presetCustomer}
                                 />
                                 {errors.customerName && (
                                     <small className="text-danger">{errors.customerName}</small>
@@ -540,6 +633,7 @@ const CreateOrder = () => {
                                     value={form1Data.companyName}
                                     onChange={handleChange1}
                                     name="companyName"
+                                    readOnly = {presetCustomer}
                                 />
                             </div>
                             <div className="form-group mb-3">
@@ -554,6 +648,7 @@ const CreateOrder = () => {
                                     value={form1Data.customerEmail}
                                     onChange={handleChange1}
                                     name="customerEmail"
+                                    readOnly = {presetCustomer}
                                 />
                                 {errors.customerEmail && (
                                     <small className="text-danger">{errors.customerEmail}</small>
@@ -571,6 +666,7 @@ const CreateOrder = () => {
                                     value={form1Data.customerPhone}
                                     onChange={handleChange1}
                                     name="customerPhone"
+                                    readOnly = {presetCustomer}
                                 />
                                 {errors.customerPhone && (
                                     <small className="text-danger">{errors.customerPhone}</small>

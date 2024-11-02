@@ -335,3 +335,61 @@ textarea {
 .Urgent input {
     transform: scale(1.3);
 }
+
+
+#CustomerSelect {
+    width: 100%;
+    padding: 5px; /* Match padding with other inputs */
+    border: 1px solid #ccc; /* Consistent border color */
+    border-radius: 4px; /* Consistent border radius */
+    font-size: 1rem; /* Match font size */
+    background-color: #ffffff; /* White background for consistency */
+    color: #333; /* Text color for visibility */
+    box-sizing: border-box; /* Include padding in width */
+    transition: border-color 0.3s ease; /* Smooth border transition */
+}
+
+#CustomerSelect:focus {
+    border-color: #009688; /* Teal color on focus */
+    outline: none; /* Remove default outline */
+}
+
+#CustomerSelect option:disabled {
+    color: #999;
+}
+
+#CustomerSelect:hover {
+    border-color: #003366; /* Navy color on hover */
+    background-color: #f9f9f9; /* Light background on hover */
+}
+
+
+/* Registered Customers Select Styling */
+#productSelect {
+    width: 100%;
+    padding: 5px; /* Match padding with other inputs */
+    border: 1px solid #ccc; /* Consistent border color */
+    border-radius: 4px; /* Consistent border radius */
+    font-size: 1rem; /* Match font size */
+    background-color: #ffffff; /* White background for consistency */
+    color: #333; /* Text color for visibility */
+    box-sizing: border-box; /* Include padding in width */
+    transition: border-color 0.3s ease; /* Smooth border transition */
+    line-height: 1rem;
+}
+
+#productSelect:focus {
+    border-color: #009688; /* Teal color on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Placeholder option style */
+#productSelect option:disabled {
+    color: #999; /* Slightly lighter color for placeholder */
+}
+
+/* Hover effect to match the other form fields */
+#productSelect:hover {
+    border-color: #003366; /* Navy color on hover */
+    background-color: #f9f9f9; /* Light background on hover */
+}
