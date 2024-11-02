@@ -54,7 +54,7 @@ const ManagementDashboard = () => {
                             <tbody>
                                 {orders.map((order) => (
                                     <tr key={order.order_id} className={getStatusClass(order.status)}>
-                                        <td><Link to={`/order/${order.order_id}`}>
+                                        <td><Link to={`/order/${order.order_id}`} className='DashboardLink'>
                                             Order Number - {order.order_id}
                                         </Link></td>
                                         <td>{order.customer}</td>

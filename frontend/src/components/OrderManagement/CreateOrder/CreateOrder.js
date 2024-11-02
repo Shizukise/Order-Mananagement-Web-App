@@ -150,6 +150,17 @@ const CreateOrder = () => {
         price: 0,
     });
 
+    // Validation function for quantity
+
+    const ValidateQuantity = (quantity) => {
+        let number = parseInt(quantity,10)
+        console.log(typeof(number))
+        if (isNaN(number)) {
+            return false
+        }
+        return true
+    }
+
     // Validation function for email
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -158,7 +169,7 @@ const CreateOrder = () => {
 
     // Validation function for phone number
     const validatePhoneNumber = (phone) => {
-        const phoneRegex = /^[0-9]{10,15}$/; // Allow only digits, 10-15 characters
+        const phoneRegex = /^[0-9]{10}$/;
         return phoneRegex.test(phone);
     };
 
@@ -233,13 +244,17 @@ const CreateOrder = () => {
                 [name]: value,
                 price: currentUnitPrice * value,
             }));
+            if (name === "quantity") {
+                setQuantityError("")
+            }
         }
     };
 
     const [selectedProductError, setSelectedProductError] = useState("");
+    const [selectedQuantityError, setQuantityError] = useState("");
 
     const handleAddBtn = () => {
-        if (selectedProductError === "" && form3Data.productSelect !== "") {
+        if (selectedProductError === "" && form3Data.productSelect !== "" && selectedQuantityError === "" && ValidateQuantity(form3Data.quantity)) {
             setCurrentOrderItems([...currentOrderItems, form3Data]);
             setForm3Data({
                 productSelect: "",
@@ -250,10 +265,15 @@ const CreateOrder = () => {
             });
             quantity.current.value = 1;
             selected.current.value = "Type to search..."
-        } else {
+        } else if (form3Data.productSelect === "") {
             setSelectedProductError((prevDATA) => ({
                 ...prevDATA,
                 error: "Please select a product",
+            }));
+        } else {
+            setQuantityError((prevData) => ({
+                ...prevData,
+                error: "Please insert only numbers"
             }));
         }
     };
@@ -262,8 +282,8 @@ const CreateOrder = () => {
         setSummaryBill(currentOrderItems);
     };
     const BillData = () => {
-        return summaryBill.map((product) => (
-            <div className="order-summary" key={product["productRef"]}>
+        return summaryBill.map((product, index) => (
+            <div className="order-summary" key={index}>
                 <p className="order-summary-item">
                     Reference: {product["productRef"]} -- {product["productSelect"]}{" "}
                 </p>
@@ -320,7 +340,7 @@ const CreateOrder = () => {
         };
 
         return currentOrderItems.map((each, index) => (
-            <tr key={each.productRef || index}>
+            <tr key={index}>
                 <td>{each.productRef}</td>
                 <td>{each.productSelect}</td>
                 <td>{each.quantity}</td>
@@ -369,6 +389,7 @@ const CreateOrder = () => {
                 title: "Error Submitting Order",
                 message: "Please fill all the required fields correctly.",
             });
+
             return;
         }
 
@@ -387,28 +408,33 @@ const CreateOrder = () => {
                 if (response.ok) {
                     navigate('/dashboard');
                     setErrorModal({
-                        title: "Info",
+                        title: "Success!",
                         message: `${result}`,
                     });
                 } else if (response.status === 400) {
                     setErrorModal({
-                        title: "Error 400",
-                        message: `Missing nome fields`,
+                        title: "Oops",
+                        message: result.message
                     });
                 } else if (response.status === 412) {
                     setErrorModal({
-                        title: "Error 412",
-                        message: `Some field is incorrect`,
+                        title: "Oops",
+                        message: result.message
                     });
                 } else if (response.status === 401) {
                     setErrorModal({
-                        title: "Error 401",
-                        message: `Unauthorized access`,
+                        title: "Oops",
+                        message: result.message
                     });
                 } else if (response.status === 500) {
                     setErrorModal({
-                        title: "Error 500",
-                        message: `Server error`,
+                        title: "Oops",
+                        message: result.message
+                    });
+                } else if (response.status === 409) {
+                    setErrorModal({
+                        title: "Oops",
+                        message: result.message
                     });
                 } else {
                     setErrorModal({
@@ -728,6 +754,11 @@ const CreateOrder = () => {
                                         onChange={handleChange3}
                                         ref={quantity}
                                     />
+                                    {selectedQuantityError.error && (
+                                        <small className="text-danger">
+                                            {selectedQuantityError.error}
+                                        </small>
+                                    )}
                                 </div>
                                 <div className="col-md-2 mb-3">
                                     <label htmlFor="unitPrice" className="form-label">
