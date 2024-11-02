@@ -50,6 +50,24 @@ def getAllProducts():
     structured = [[i.product_name,i.product_ref, i.product_price] for i in allProducts]
     return jsonify(structured),200
 
+#Get all customers endpoint
+@app.route('/getallcustomers', methods=['GET'])
+@login_required
+def getAllCustomers():
+    customers = Customer.query.all()
+    structured = [i.customer_name for i in customers]
+    if len(structured) == 0:
+        return jsonify([]),200
+    return jsonify(structured),200
+
+#Get customer data
+@app.route('/getcustomerdata/<customer>')
+@login_required
+def getCustomerData(customer):
+    customer = Customer.query.filter_by(customer_name = customer).first()
+    print(customer.customer_name)
+    return jsonify(customer.toRegisteredCustomer()),200
+
 #Create order endpoint                                               #Technical debt here - new customer with existing email: No error handling is being done here.
                                                                                         #When searching for a product, unexistant products can be inputed.
 @app.route('/createorder', methods=['POST'])
@@ -65,21 +83,29 @@ def createOrder():
     def validateAllArticles(array):
         return len(array) >= 1
 
+    
+
     if validateCellphone(data['form1Data']['customerPhone']) and validate_email(data['form1Data']['customerEmail']) and validateAllArticles([i for i in data['currentOrderItems']]):
-        customer = Customer.query.filter_by(customer_name = data['form1Data']['customerName']).first()
-        if not customer:
+        global customer
+        customer = Customer.query.filter_by(email = data['form1Data']['customerEmail']).first()
+        if not customer and data['presetCustomer'] == False:
             newCustomer = Customer(customer_name = data['form1Data']['customerName'], company_name = data['form1Data']['companyName'],
                                    email = data['form1Data']['customerEmail'], phone = data['form1Data']['customerPhone'],
                                    shipping_address = data['form1Data']['shippingAddress'])
             db.session.add(newCustomer)
-            db.session.commit()
-    else:
-        return jsonify({'message' : ''}), 412
+            db.session.commit()            
+        else:
+            if data['presetCustomer'] == True:
+                customer = Customer.query.filter_by(email = data['form1Data']['customerEmail']).first()
+            else:
+                return jsonify({'message' : 'There is already a customer registered with that email.'}), 409
+   
     urgent = False
     if data['urgent'] == True:
         urgent = True
+    
+    customer = Customer.query.filter_by(email = data['form1Data']['customerEmail']).first()
 
-    customer =  Customer.query.filter_by(customer_name = data['form1Data']['customerName']).first()                               
     newOrder = Order(customer_id = customer.customer_id, creator_id = current_user.user_id, payment_method = data['form2Data']['paymentMethod'],
                      payment_terms = data['form2Data']['paymentTerms'], shipping_address = data['form1Data']['shippingAddress'], 
                      delivery_method = data['form2Data']['deliveryMethod'], total_amount = sum([i['price'] for i in data['currentOrderItems']]), urgent = urgent)

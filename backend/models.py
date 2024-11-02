@@ -51,6 +51,15 @@ class Customer(db.Model):
     shipping_address = db.Column(db.String(200), nullable=False)
     billing_address = db.Column(db.String(200), nullable=True)  # Billing could be optional if same as shipping
 
+
+    def toRegisteredCustomer(self):
+        return {
+            "customer_name" : self.customer_name,
+            "company_name" : self.company_name,
+            "email" : self.email,
+            "phone_number" : self.phone
+        }
+
 # Order Model
 class Order(db.Model):
     __tablename__ = 'orders'

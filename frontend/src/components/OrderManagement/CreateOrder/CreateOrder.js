@@ -477,7 +477,7 @@ const CreateOrder = () => {
                 const response = await fetch('/createorder', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ form1Data, form2Data, currentOrderItems, urgent }), // this is all the data for this page form
+                    body: JSON.stringify({ form1Data, form2Data, currentOrderItems, urgent, presetCustomer }), // this is all the data for this page form
                     credentials: 'include'
                 });
                 const result = await response.json()
