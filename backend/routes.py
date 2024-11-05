@@ -1,6 +1,3 @@
-from ast import Or
-from crypt import methods
-from email import message
 from backend import app,bcrypt,db
 from backend.models import OrderHistoric, OrderMessage, Product, User, Customer, Order, OrderItem
 from flask import render_template, request, jsonify, session

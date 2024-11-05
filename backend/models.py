@@ -24,7 +24,10 @@ class User(db.Model, UserMixin):
 
     @password.setter
     def password(self, unhashed_password):
-        self.password_hash = bcrypt.generate_password_hash(unhashed_password).decode('utf-8')
+        if not isinstance(unhashed_password,str):
+            raise TypeError
+        else:
+            self.password_hash = bcrypt.generate_password_hash(unhashed_password).decode('utf-8')
 
     def password_authentication(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
