@@ -28,7 +28,7 @@ const MainLoginDiv = () => {
 
         if (response.ok) {
             const userData = await response.json();
-            login([userData.user,userData.department]);
+            login([userData.user,userData.department,userData.email]);
             navigate('/dashboard')
         } else {
             //pop up login modal error

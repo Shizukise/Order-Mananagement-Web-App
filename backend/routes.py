@@ -1,5 +1,5 @@
 from backend import app,bcrypt,db
-from backend.models import OrderHistoric, OrderMessage, Product, User, Customer, Order, OrderItem
+from backend.models import EnterpriseEmail, OrderHistoric, OrderMessage, Product, User, Customer, Order, OrderItem
 from flask import render_template, request, jsonify, session
 from flask_login import login_user, logout_user, login_required, current_user
 #sub
@@ -28,7 +28,8 @@ def login():
     if user and bcrypt.check_password_hash(user.password_hash, password):
         login_user(user)
         session.permanent = True
-        return jsonify({"message": "Login successful", "user" : f"{user.username}", "department" : f"{user.type}"}), 200
+        email = EnterpriseEmail.query.filter_by(user_id = user.user_id).first()
+        return jsonify({"message": "Login successful", "user" : f"{user.username}", "department" : f"{user.type}", "email":f"{email.email}"}), 200
     
     return jsonify({"message": "Invalid credentials"}), 401
 

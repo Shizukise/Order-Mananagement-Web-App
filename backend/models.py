@@ -188,3 +188,12 @@ class OrderHistoric(db.Model):
             "event" : self.event,
             "timestamp" : self.timestamp.strftime("%m/%d %H:%M")
         }
+    
+class EnterpriseEmail(db.Model):
+    __tablename__ = 'enterprise_email'
+    id = db.Column(db.Integer(), primary_key = True)
+    user_id = db.Column(db.Integer(), ForeignKey('users.user_id'), nullable=False)
+    email = db.Column(db.String(20), unique = True, nullable = False)
+
+    #Relationship
+    user = db.relationship('User', backref='enterprise_email')

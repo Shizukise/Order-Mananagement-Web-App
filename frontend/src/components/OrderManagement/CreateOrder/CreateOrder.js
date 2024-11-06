@@ -573,10 +573,10 @@ const CreateOrder = () => {
                                     type="email"
                                     className="form-control"
                                     id="creatorEmail"
-                                    placeholder="name@example.com"
-                                    value={form1Data.creatorEmail}
+                                    value={user[2] || ''}
                                     onChange={handleChange1}
                                     name="creatorEmail"
+                                    readOnly
                                 />
                                 {errors.creatorEmail && (
                                     <small className="text-danger">{errors.creatorEmail}</small>
