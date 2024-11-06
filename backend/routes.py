@@ -1,3 +1,4 @@
+from flask_migrate import history
 from backend import app,bcrypt,db
 from backend.models import EnterpriseEmail, OrderHistoric, OrderMessage, Product, User, Customer, Order, OrderItem
 from flask import render_template, request, jsonify, session
@@ -211,6 +212,38 @@ def ConfirmFullOrder(orderid):
     db.session.commit()
     return jsonify({"message":"Order confirmed successfully"}),200
 
+
+#Partial delivery (PARTIAL ORDER)
+@app.route('/confirmpartialorder/<int:orderid>', methods=['POST'])
+@login_required
+def confirmPartialOrder(orderid):
+    data = request.get_json()
+    print(data)
+    order = Order.query.filter_by(order_id = orderid).first()
+    order.status = "Partially delivered"
+    historyLog = OrderHistoric(order_id = orderid, event = f"""Order delivered partially. Some items still need to be confirmed and sent. \n
+                                                            Sent for delivery by {current_user.username}""")
+    db.session.add(historyLog)
+    #Order that will contain items being delivered  
+    newOrder = Order(status="Delivery",customer_id = order.customer_id, creator = order.creator, payment_method = order.payment_method,
+                     payment_terms = order.payment_terms, shipping_address = order.shipping_address, delivery_method = order.delivery_method,
+                    urgent = order.urgent)
+    db.session.add(newOrder)
+    db.session.commit()
+    for quantity in data["quantities"].values():
+        currentItem = OrderItem.query.filter_by(order_id = order.order_id).first()
+        currentItem.quantity = currentItem.quantity - int(quantity)
+        currentTotal = currentItem.total_price
+        currentItem.total_price=  currentTotal - (int(quantity) * currentItem.unit_price)
+        newOrderItem = OrderItem( order_id = newOrder.order_id,product_id = currentItem.product_id,
+                                 quantity = quantity, unit_price = currentItem.unit_price, total_price = int(quantity) * currentItem.unit_price  )
+        db.session.add(newOrderItem)
+    historyLogNewOrder = OrderHistoric(order_id = newOrder.order_id, event = f""" Order created from order number - {order.order_id}). Waiting to be delivered""")
+    db.session.add(historyLogNewOrder)
+    db.session.commit()
+    return jsonify({"message": "Order confirmed successfully"}),200
+
+    
 
 #Delete order
 @app.route('/deleteorder/<int:orderid>', methods=['DELETE'])

@@ -131,7 +131,7 @@ const CreateOrder = () => {
     }
 
     const [form1Data, setForm1Data] = useState({
-        creatorEmail: "",
+        creatorEmail: user[2],
         customerName: "",
         companyName: "",
         customerEmail: "",

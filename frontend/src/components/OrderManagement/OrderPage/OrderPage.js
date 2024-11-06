@@ -10,6 +10,7 @@ const Order = () => {
     const [orderData, setOrderData] = useState(null);
     const [isUrgent, setIsUrgent] = useState(false);
     const [stateColor, setStateColor] = useState("black");
+    const [initialQuantities,setInitialQuantities] = useState(null)
     const [quantities, setQuantities] = useState(null)
     const [delivery, setDelivery] = useState(false)
     const [sent, setSent] = useState(false)
@@ -121,6 +122,7 @@ const Order = () => {
                         quantities[product.product_name] = product.quantity
                     }
                     setQuantities(quantities)
+                    setInitialQuantities(quantities)
                 } else if (data.order.status === "Delivery") {
                     setDelivery(true)
                     setStateColor("#4FC3F7");
@@ -199,18 +201,31 @@ const Order = () => {
 
     
     async function confirm() {
-        const response = await fetch(`/confirmorder/${orderId}`,{
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ quantities }), 
-            credentials: 'include'
-        });
-        if (response.ok) {
-            console.log("should navigate")
-            navigate(`/order/${orderId}`)
-            setConfirmationModal(false)
-            setRefresh(!refresh)
-        }      
+        if (quantities == initialQuantities) {
+            const response = await fetch(`/confirmorder/${orderId}`,{
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ quantities }), 
+                credentials: 'include'
+            });
+            if (response.ok) {
+                navigate(`/order/${orderId}`)
+                setConfirmationModal(false)
+                setRefresh(!refresh)
+            }
+        } else {
+            const response = await fetch(`/confirmpartialorder/${orderId}`,{
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ quantities }), 
+                credentials: 'include'
+            });
+            if (response.ok) {
+                navigate(`order/${orderId}`)
+                setConfirmationModal(false)
+                setRefresh(!refresh)
+            }
+        }
     }
 
     async function deleteOrder() {
